@@ -1,5 +1,6 @@
 package com.z_soft.z_finance.core.impls;
 
+import com.z_soft.z_finance.core.abstracts.AbstractTreeNode;
 import com.z_soft.z_finance.core.exceptions.AmountException;
 import com.z_soft.z_finance.core.exceptions.CurrencyException;
 import com.z_soft.z_finance.core.interfaces.Storage;
@@ -11,9 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultStorage implements Storage{
-
-    private String name;
+public class DefaultStorage extends AbstractTreeNode implements Storage{
 
     // сразу инициализируем пустые коллекции, потому что хоть одна валюта будет
     private Map<Currency, BigDecimal> currencyAmounts = new HashMap<>();
@@ -23,13 +22,17 @@ public class DefaultStorage implements Storage{
     }
 
     public DefaultStorage(String name) {
-        this.name = name;
+        super(name);
+    }
+
+    public DefaultStorage(String name, long id) {
+        super(name, id);
     }
 
     public DefaultStorage(List<Currency> currencyList, Map<Currency, BigDecimal> currencyAmounts, String name) {
+        super(name);
         this.currencyList = currencyList;
         this.currencyAmounts = currencyAmounts;
-        this.name = name;
     }
 
     public DefaultStorage(Map<Currency, BigDecimal> currencyAmounts) {
@@ -155,12 +158,4 @@ public class DefaultStorage implements Storage{
 
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

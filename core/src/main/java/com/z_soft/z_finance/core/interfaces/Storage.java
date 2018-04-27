@@ -11,7 +11,7 @@ import java.util.Map;
 //TODO разобрать класс Money вместо BigDecimal
 public interface Storage {
 
-    String getName();
+    //String getName();
 
     // получение баланса (остатка)
     Map<Currency, BigDecimal> getCurrencyAmounts(); // остаток по каждой доступной валюте в хранилище
