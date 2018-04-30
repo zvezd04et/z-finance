@@ -63,7 +63,7 @@ public class AbstractTreeNode implements TreeNode {
 
     @Override
     public long getId() {
-        return 0;
+        return id;
     }
 
     public void setId(long id) {
