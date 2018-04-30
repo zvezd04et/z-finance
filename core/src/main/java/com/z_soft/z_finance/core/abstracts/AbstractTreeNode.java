@@ -82,6 +82,10 @@ public class AbstractTreeNode implements TreeNode {
         return null;
     }
 
+    @Override
+    public boolean hasChilds(){
+        return !childs.isEmpty();// если есть дочерние элементы - вернуть true
+    }
 
     @Override
     public String toString() {

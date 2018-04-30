@@ -21,4 +21,6 @@ public interface TreeNode {
     TreeNode getParent(); // получение родительского элемента - пригодится в разных ситуациях, например для отчетности по всем узлам дерева
 
     void setParent(TreeNode parent);	// установка родительского элемента
+
+    boolean hasChilds(); // проверяет, есть ли дочерние элементы
 }
