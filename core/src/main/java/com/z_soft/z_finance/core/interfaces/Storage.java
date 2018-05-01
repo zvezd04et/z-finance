@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 //TODO разобрать класс Money вместо BigDecimal
-public interface Storage {
+public interface Storage extends TreeNode{
 
     //String getName();
 

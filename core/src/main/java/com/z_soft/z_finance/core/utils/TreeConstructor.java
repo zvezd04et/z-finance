@@ -8,9 +8,9 @@ import java.util.List;
 public class TreeConstructor<T extends TreeNode> {
 
     // встраивает новый элемент в нужное место дерева: суть в том, что нужно найти родительский элемент для объекта newNode
-    public void addToTree(long parentId, T newNode, List<T> storageList) {
+    public void addToTree(long parentId, T newNode, List<T> nodeList) {
         if (parentId!=0){
-            for (T currentNode: storageList) {// искать сначала во всех корневых объектах
+            for (T currentNode: nodeList) {// искать сначала во всех корневых объектах
                 if (currentNode.getId()==parentId){
                     currentNode.add(newNode);
                     return;
@@ -24,7 +24,7 @@ public class TreeConstructor<T extends TreeNode> {
             }
         }
 
-        storageList.add(newNode);// если не найден родительский элемент - добавляем как корневой
+        nodeList.add(newNode);// если не найден родительский элемент - добавляем как корневой
     }
 
 
