@@ -1,8 +1,8 @@
 package com.z_soft.z_finance.core.interfaces;
 
-import com.z_soft.z_finance.core.objects.OperationType;
+import com.z_soft.z_finance.core.enums.OperationType;
 
-public interface Source {
+public interface Source extends TreeNode{
 
     String getName();
 

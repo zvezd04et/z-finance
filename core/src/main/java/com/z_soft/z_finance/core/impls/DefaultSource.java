@@ -3,7 +3,7 @@ package com.z_soft.z_finance.core.impls;
 import com.z_soft.z_finance.core.abstracts.AbstractTreeNode;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
-import com.z_soft.z_finance.core.objects.OperationType;
+import com.z_soft.z_finance.core.enums.OperationType;
 
 import java.util.List;
 
