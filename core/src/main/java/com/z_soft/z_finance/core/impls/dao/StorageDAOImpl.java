@@ -4,7 +4,6 @@ import com.z_soft.z_finance.core.database.SQLiteConnection;
 import com.z_soft.z_finance.core.impls.DefaultStorage;
 import com.z_soft.z_finance.core.interfaces.Storage;
 import com.z_soft.z_finance.core.interfaces.dao.StorageDAO;
-import com.z_soft.z_finance.core.utils.ValueTree;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -20,24 +19,43 @@ import java.util.logging.Logger;
 
 public class StorageDAOImpl implements StorageDAO {
 
-    private static final String CURRENCY_TABLE = "currency_amount";
+    private static final String CURRENCY_AMOUNT_TABLE = "currency_amount";
     private static final String STORAGE_TABLE = "storage";
-
-    private ValueTree<Storage> valueTree = new ValueTree<>();
 
     private List<Storage> storageList = new ArrayList<>();
 
+    @Override
+    public List<Storage> getAll() {
+        storageList.clear();
+
+        try (Statement stmt = SQLiteConnection.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("select * from " + STORAGE_TABLE + " order by parent_id")) {
+
+            while (rs.next()) {
+                DefaultStorage storage = new DefaultStorage();
+                storage.setId(rs.getLong("id"));
+                storage.setName(rs.getString("name"));
+                storage.setParentId(rs.getLong("parent_id"));
+                storageList.add(storage);
+            }
+
+            return storageList;
+
+        } catch (SQLException e) {
+            Logger.getLogger(StorageDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return null;
+    }
 
     @Override
     public boolean addCurrency(Storage storage, Currency currency) {
 
         // для автоматического закрытия ресурсов
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + CURRENCY_TABLE + "(currency_code, storage_id, amount) values(?,?,?)")) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + CURRENCY_AMOUNT_TABLE + "(currency_code, storage_id) values(?,?)")) {
 
             stmt.setString(1, currency.getCurrencyCode());
             stmt.setLong(2, storage.getId());
-            stmt.setBigDecimal(3, BigDecimal.ZERO);
-
 
             if (stmt.executeUpdate() == 1) { // если была добавлена 1 запись
                 return true;
@@ -54,7 +72,7 @@ public class StorageDAOImpl implements StorageDAO {
     @Override
     public boolean deleteCurrency(Storage storage, Currency currency) {
         // TODO реализовать - если есть ли операции по данной валюте - запрещать удаление
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + CURRENCY_TABLE + " where storage_id=? and currency_code=?")) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + CURRENCY_AMOUNT_TABLE + " where storage_id=? and currency_code=?")) {
 
             stmt.setLong(1, storage.getId());
             stmt.setString(2, currency.getCurrencyCode());
@@ -73,10 +91,11 @@ public class StorageDAOImpl implements StorageDAO {
 
     @Override
     public boolean updateAmount(Storage storage, Currency currency, BigDecimal amount) {
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + STORAGE_TABLE + " set name=? where id=?")) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + CURRENCY_AMOUNT_TABLE + " set amount=? where storage_id=? and currency_code=?")) {
 
-            stmt.setString(1, storage.getName());
+            stmt.setBigDecimal(1, amount);
             stmt.setLong(2, storage.getId());
+            stmt.setString(3, currency.getCurrencyCode());
 
             if (stmt.executeUpdate() == 1) {
                 return true;
@@ -91,35 +110,31 @@ public class StorageDAOImpl implements StorageDAO {
 
     @Override
     public Storage get(long id) {
-        return null;
-    }
 
-    @Override
-    public List<Storage> getAll() {
-        storageList.clear();
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("select * from " + STORAGE_TABLE + " where id=?")) {
 
-        try (Statement stmt = SQLiteConnection.getConnection().createStatement();
-             ResultSet rs = stmt.executeQuery("select * from " + STORAGE_TABLE)) {
+            stmt.setLong(1, id);
 
-            while (rs.next()) {
-                DefaultStorage storage = new DefaultStorage();
-                storage.setId(rs.getLong("id"));
-                storage.setName(rs.getString("name"));
+            try (ResultSet rs = stmt.executeQuery()){
+                DefaultStorage storage = null;
 
-                long parentId = rs.getLong("parent_id");
+                if (rs.next()){
+                    storage = new DefaultStorage();
+                    storage.setId(rs.getLong("id"));
+                    storage.setName(rs.getString("name"));
+                    storage.setParentId(rs.getLong("parent_id"));
+                }
 
-                valueTree.addToTree(parentId, storage, storageList);
-
+                return storage;
             }
 
-            return storageList;// в итоге storageList должен содержать только корневые элементы
-
         } catch (SQLException e) {
-            Logger.getLogger(StorageDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(SourceDAOImpl.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return null;
     }
+
 
     @Override
     public boolean update(Storage storage) {
@@ -157,5 +172,4 @@ public class StorageDAOImpl implements StorageDAO {
 
         return false;
     }
-
 }

@@ -22,6 +22,7 @@ public class SQLiteConnection {
 
             if (con==null) con = DriverManager.getConnection(url);
 
+            con.createStatement().execute("PRAGMA foreign_keys = ON");
             return con;
 
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {

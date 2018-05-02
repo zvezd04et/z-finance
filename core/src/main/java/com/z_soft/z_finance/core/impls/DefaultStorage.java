@@ -43,6 +43,7 @@ public class DefaultStorage extends AbstractTreeNode implements Storage{
         this.currencyList = currencyList;
     }
 
+    @Override
     public Map<Currency, BigDecimal> getCurrencyAmounts() {
         return currencyAmounts;
     }
