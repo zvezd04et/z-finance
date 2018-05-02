@@ -147,4 +147,8 @@ public class StorageManager implements StorageDAO {
     public StorageDAO getStorageDAO() {
         return storageDAO;
     }
+
+    public Map<Long, Storage> getIdentityMap() {
+        return identityMap;
+    }
 }

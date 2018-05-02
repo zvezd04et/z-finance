@@ -1,6 +1,7 @@
 package com.z_soft.z_finance.core.impls.operations;
 
 import com.z_soft.z_finance.core.abstracts.AbstractOperation;
+import com.z_soft.z_finance.core.enums.OperationType;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.Storage;
 
@@ -11,34 +12,14 @@ import java.util.Currency;
 //TODO для всех классов создать конструкторы без поля id, так как оно будет autoincrement
 public class OutcomeOperation extends AbstractOperation {
 
-    private Storage fromStorage;
-    private Source toSource;
-    private BigDecimal amount;
-    private Currency currency;
+    private Storage fromStorage; // откуда потратили
+    private Source toSource; // на что потратили
+    private BigDecimal fromAmount; // сумму, которую потратили
+    private Currency fromCurrency; // в какой валюте потратили
 
-    public OutcomeOperation(long id, Calendar dateTime, String addInfo, Storage fromStorage, Source toSource, BigDecimal amount, Currency currency) {
-        super(id, dateTime, addInfo);
-        this.fromStorage = fromStorage;
-        this.toSource = toSource;
-        this.amount = amount;
-        this.currency = currency;
+    public OutcomeOperation() {
+        super(OperationType.OUTCOME);
     }
-
-    public OutcomeOperation(long id, Storage fromStorage, Source toSource, BigDecimal amount, Currency currency) {
-        super(id);
-        this.fromStorage = fromStorage;
-        this.toSource = toSource;
-        this.amount = amount;
-        this.currency = currency;
-    }
-
-    public OutcomeOperation(Storage fromStorage, Source toSource, BigDecimal amount, Currency currency) {
-        this.fromStorage = fromStorage;
-        this.toSource = toSource;
-        this.amount = amount;
-        this.currency = currency;
-    }
-
 
 
     public Storage getFromStorage() {
@@ -57,19 +38,19 @@ public class OutcomeOperation extends AbstractOperation {
         this.toSource = toSource;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getFromAmount() {
+        return fromAmount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setFromAmount(BigDecimal fromAmount) {
+        this.fromAmount = fromAmount;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public Currency getFromCurrency() {
+        return fromCurrency;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setFromCurrency(Currency fromCurrency) {
+        this.fromCurrency = fromCurrency;
     }
 }
