@@ -36,6 +36,7 @@ public class DefaultSource extends AbstractTreeNode implements Source{
         this.operationType = operationType;
     }
 
+    @Override
     public OperationType getOperationType() {
         return operationType;
     }
@@ -55,4 +56,14 @@ public class DefaultSource extends AbstractTreeNode implements Source{
 
         super.add(child);
     }
+
+    @Override
+    public void setParent(TreeNode parent) {
+        if (parent instanceof DefaultSource){
+            operationType = ((DefaultSource)parent).getOperationType();// при установке родителя - автоматически проставляем тип операции как у родителя
+        }
+        super.setParent(parent);
+    }
+
+
 }

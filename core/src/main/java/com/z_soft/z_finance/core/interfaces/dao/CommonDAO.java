@@ -9,5 +9,6 @@ public interface CommonDAO<T> {
     T get(long id);
     boolean update(T object);// boolean - чтобы удостовериться, что операция прошла успешно
     boolean delete(T object);
+    boolean add(T object);
 
 }

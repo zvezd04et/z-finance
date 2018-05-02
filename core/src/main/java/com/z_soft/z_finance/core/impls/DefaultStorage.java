@@ -61,37 +61,18 @@ public class DefaultStorage extends AbstractTreeNode implements Storage{
 
     // ручное обновление баланса
     @Override
-    public void changeAmount(BigDecimal amount, Currency currency) throws CurrencyException {
+    public void updateAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException {
         checkCurrencyExist(currency);
+        checkAmount(amount);// не даем балансу уйти в минус
         currencyAmounts.put(currency, amount);
     }
 
-    // добавление денег в хранилище
-    @Override
-    public void addAmount(BigDecimal amount, Currency currency) throws CurrencyException {
-        checkCurrencyExist(currency);
-        BigDecimal oldAmount = currencyAmounts.get(currency);
-        currencyAmounts.put(currency, oldAmount.add(amount));
-    }
 
     // проверка, есть ли такая валюта в данном хранилище
     private void checkCurrencyExist(Currency currency) throws CurrencyException {
         if (!currencyAmounts.containsKey(currency)) {
             throw new CurrencyException("Currency " + currency + " not exist");
         }
-    }
-
-    // отнимаем деньги из хранилища
-    @Override
-    public void expenseAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException {
-
-        checkCurrencyExist(currency);
-
-        BigDecimal oldAmount = currencyAmounts.get(currency);
-        BigDecimal newValue = oldAmount.subtract(amount);
-        checkAmount(newValue);// не даем балансу уйти в минус
-        currencyAmounts.put(currency, newValue);
-
     }
 
     // сумма не должна быть меньше нуля (в реальности такое невозможно, мы не можем потратить больше того, что есть)
@@ -104,14 +85,14 @@ public class DefaultStorage extends AbstractTreeNode implements Storage{
     }
 
     @Override
-    public void addCurrency(Currency currency) throws CurrencyException {
+    public void addCurrency(Currency currency, BigDecimal initAmount) throws CurrencyException {
 
         if (currencyAmounts.containsKey(currency)) {
             throw new CurrencyException("Currency already exist");// пока просто сообщение на англ, без локализации
         }
 
         currencyList.add(currency);
-        currencyAmounts.put(currency, BigDecimal.ZERO);
+        currencyAmounts.put(currency, initAmount);
 
     }
 

@@ -1,5 +1,6 @@
 package com.z_soft.z_finance.core.decorator;
 
+import com.z_soft.z_finance.core.exceptions.AmountException;
 import com.z_soft.z_finance.core.exceptions.CurrencyException;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.Storage;
@@ -52,51 +53,93 @@ public class StorageManager implements StorageDAO {
     @Override
     // TODO подумать как сделать - сначала обновлять в базе, а потом уже в коллекции (либо - если в базе не обновилось - откатить изменения в объекте коллекции)
     public boolean update(Storage storage) {
-        if (storageDAO.update(storage)) {
-            return true;
-        }
-        return false;
+
+        return storageDAO.update(storage);
+
     }
 
     @Override
     public boolean delete(Storage storage) {
         // TODO добавить нужные Exceptions
         if (storageDAO.delete(storage)) {
-            identityMap.remove(storage.getId());
-            if (storage.getParent()!=null) {// если удаляем дочерний элемент
-                storage.getParent().remove(storage);// т.к. у каждого дочернего элемента есть ссылка на родительский - можно быстро удалять элемент из дерева без поиска по всему дереву
-            }else{// если удаляем элемент, у которого нет родителей
-                treeList.remove(storage);
-            }
+            removeFromCollections(storage);
 
             return true;
         }
         return false;
     }
 
+    // добавляет объект во все коллекции
+    private void addToCollections(Storage storage) {
+        identityMap.put(storage.getId(), storage);
+
+        if (storage.hasParent()) {
+            if (!storage.getParent().getChilds().contains(storage)) {// если ранее не был добавлен уже
+                storage.getParent().add(storage);
+            }
+        } else {// если добавляем элемент, у которого нет родителей (корневой)
+            treeList.add(storage);
+        }
+    }
+
+    // удаляет объект из всех коллекций
+    private void removeFromCollections(Storage storage) {
+        identityMap.remove(storage.getId());
+        if (storage.getParent() != null) {// если удаляем дочерний элемент
+            storage.getParent().remove(storage);// т.к. у каждого дочернего элемента есть ссылка на родительский - можно быстро удалять элемент из дерева без поиска по всему дереву
+        } else {// если удаляем элемент, у которого нет родителей
+            treeList.remove(storage);
+        }
+    }
+
     @Override
-    public boolean addCurrency(Storage storage, Currency currency) throws CurrencyException {
-        if (storageDAO.addCurrency(storage, currency)){
-            storage.addCurrency(currency);
+    public boolean add(Storage storage) {
+
+        if (storageDAO.add(storage)) {// если в БД добавилось нормально
+            addToCollections(storage);
+            return true;
+        }else{// откатываем добавление
+            // для отката можно использовать паттерн Command (для функции Undo)
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean addCurrency(Storage storage, Currency currency, BigDecimal initAmount) throws CurrencyException {
+        if (storageDAO.addCurrency(storage, currency, initAmount)) {// если в БД добавилось нормально
+            storage.addCurrency(currency, initAmount);
             return true;
         }
+
         return false;
     }
 
     @Override
     public boolean deleteCurrency(Storage storage, Currency currency) throws CurrencyException {
-        if (storageDAO.deleteCurrency(storage, currency)){
+        if (storageDAO.deleteCurrency(storage, currency)) {// если в БД удалилось нормально
             storage.deleteCurrency(currency);
             return true;
         }
         return false;
     }
 
-    // TODO при обновлении происходит наоборот - сначала обновляется объект в коллекции, потом уже в БД - продумать, как сделать, чтобы можно было откатить изменения в случае ошибки при запросе к БД
+
     @Override
     public boolean updateAmount(Storage storage, Currency currency, BigDecimal amount) {
 
-        return storageDAO.updateAmount(storage, currency, amount);
+        if (storageDAO.updateAmount(storage, currency, amount)) {
+            try {
+                storage.updateAmount(amount, currency);
+            } catch (CurrencyException e) {
+                e.printStackTrace();
+            } catch (AmountException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        return false;
 
     }
 

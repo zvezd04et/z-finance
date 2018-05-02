@@ -10,6 +10,8 @@ public interface TreeNode {
 
     long getId(); // каждый элемент дерева должен иметь свой уникальный идентификатор
 
+    void setId(long id); // установить id
+
     long getParentId();
 
     void add(TreeNode child); // добавить один дочерний элемент
@@ -25,4 +27,6 @@ public interface TreeNode {
     void setParent(TreeNode parent);	// установка родительского элемента
 
     boolean hasChilds(); // проверяет, есть ли дочерние элементы
+
+    boolean hasParent(); // проверяет, есть ли родитель
 }

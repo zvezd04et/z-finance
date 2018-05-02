@@ -62,11 +62,13 @@ public class AbstractTreeNode implements TreeNode {
         return childs;
     }
 
+
     @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
@@ -86,6 +88,11 @@ public class AbstractTreeNode implements TreeNode {
     @Override
     public boolean hasChilds(){
         return !childs.isEmpty();// если есть дочерние элементы - вернуть true
+    }
+
+    @Override
+    public boolean hasParent() {
+        return parent != null;// если есть родитель - вернет true
     }
 
     @Override
@@ -118,6 +125,7 @@ public class AbstractTreeNode implements TreeNode {
         this.name = name;
     }
 
+    @Override
     public long getParentId() {
         return parentId;
     }
