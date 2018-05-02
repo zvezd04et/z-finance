@@ -10,6 +10,8 @@ public interface TreeNode {
 
     long getId(); // каждый элемент дерева должен иметь свой уникальный идентификатор
 
+    long getParentId();
+
     void add(TreeNode child); // добавить один дочерний элемент
 
     void remove(TreeNode child); // удалить один дочерний элемент

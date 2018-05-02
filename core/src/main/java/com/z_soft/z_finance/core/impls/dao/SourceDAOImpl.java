@@ -5,7 +5,7 @@ import com.z_soft.z_finance.core.enums.OperationType;
 import com.z_soft.z_finance.core.impls.DefaultSource;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.dao.SourceDAO;
-import com.z_soft.z_finance.core.utils.TreeConstructor;
+import com.z_soft.z_finance.core.utils.ValueTree;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +27,7 @@ public class SourceDAOImpl implements SourceDAO {
     private List<Source> sourceList = new ArrayList<>();
     private Map<OperationType, List<Source>> sourceMap = new EnumMap<>(OperationType.class);// для каждого ключа (типа операции) - своя коллекция источников (корневых элементов дерева)
 
-    private TreeConstructor<Source> treeConstructor = new TreeConstructor<>();// для каждого объекта создаем свой экземпляр TreeConstructor - т.к. передается тип Generics
+    private ValueTree<Source> valueTree = new ValueTree<>();// для каждого объекта создаем свой экземпляр TreeConstructor - т.к. передается тип Generics
 
 
     @Override
@@ -46,7 +46,7 @@ public class SourceDAOImpl implements SourceDAO {
                 source.setOperationType(OperationType.getType(operationTypeId));// operationType устанавливаем только для корневых элементов, т.к. для дочерних автоматически устанавливается тип от родителя
 
                 Long parentId = rs.getLong("parent_id");// тип Long, чтобы можно было проверять на null
-                treeConstructor.addToTree(parentId, source, sourceList);
+                valueTree.addToTree(parentId, source, sourceList);
 
             }
 

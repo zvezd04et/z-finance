@@ -4,7 +4,7 @@ import com.z_soft.z_finance.core.database.SQLiteConnection;
 import com.z_soft.z_finance.core.impls.DefaultStorage;
 import com.z_soft.z_finance.core.interfaces.Storage;
 import com.z_soft.z_finance.core.interfaces.dao.StorageDAO;
-import com.z_soft.z_finance.core.utils.TreeConstructor;
+import com.z_soft.z_finance.core.utils.ValueTree;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class StorageDAOImpl implements StorageDAO {
     private static final String CURRENCY_TABLE = "currency_amount";
     private static final String STORAGE_TABLE = "storage";
 
-    private TreeConstructor<Storage> treeConstructor = new TreeConstructor<>();
+    private ValueTree<Storage> valueTree = new ValueTree<>();
 
     private List<Storage> storageList = new ArrayList<>();
 
@@ -108,7 +108,7 @@ public class StorageDAOImpl implements StorageDAO {
 
                 long parentId = rs.getLong("parent_id");
 
-                treeConstructor.addToTree(parentId, storage, storageList);
+                valueTree.addToTree(parentId, storage, storageList);
 
             }
 
