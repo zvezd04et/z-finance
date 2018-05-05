@@ -14,11 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.z_soft.z_finance.R;
-import com.z_soft.z_finance.core.database.Initializer;
-import com.z_soft.z_finance.core.enums.OperationType;
+import com.z_soft.z_finance.core.interfaces.TreeNode;
+import com.z_soft.z_finance.fragments.SprListFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,5 +102,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(TreeNode item) {
+
     }
 }
