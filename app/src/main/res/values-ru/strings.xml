@@ -8,4 +8,13 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="loading">загрузка...</string>
+
+    <!-- боковое меню-->
+    <string name="operations">Операции</string>
+    <string name="sources">Категории</string>
+    <string name="storages">Счета</string>
+    <string name="reports">Отчеты</string>
+    <string name="settings">Настройки</string>
+    <string name="help">Справка</string>
+
 </resources>
