@@ -45,10 +45,44 @@ public class SourceManager implements SourceDAO {
 
     private void fillSourceMap(List<Source> list) {
 
-        for (OperationType type : OperationType.values()) {
-            // используем lambda выражение для фильтрации
-            sourceMap.put(type, list.stream().filter(s -> s.getOperationType() == type).collect(Collectors.toList()));
+        //не работает в версиях Android ниже 7-й
+//        for (OperationType type : OperationType.values()) {
+//            // используем lambda выражение для фильтрации
+//            sourceMap.put(type, list.stream().filter(s -> s.getOperationType() == type).collect(Collectors.toList()));
+//        }
+
+
+        ArrayList<Source> incomeSources = new ArrayList<>();
+        ArrayList<Source> outcomeSources = new ArrayList<>();
+        ArrayList<Source> transferSources = new ArrayList<>();
+        ArrayList<Source> convertSources = new ArrayList<>();
+
+        // проход по коллекции только один раз
+        for (Source o : list) {
+            switch (o.getOperationType()) {
+                case INCOME: {
+                    incomeSources.add(o);
+                    break;
+                }
+                case OUTCOME: {
+                    outcomeSources.add(o);
+                    break;
+                }
+                case TRANSFER: {
+                    transferSources.add(o);
+                    break;
+                }
+                case CONVERT: {
+                    convertSources.add(o);
+                    break;
+                }
+            }
         }
+
+        sourceMap.put(OperationType.INCOME, incomeSources);
+        sourceMap.put(OperationType.OUTCOME, outcomeSources);
+        sourceMap.put(OperationType.CONVERT, convertSources);
+        sourceMap.put(OperationType.TRANSFER, transferSources);
 
     }
 
