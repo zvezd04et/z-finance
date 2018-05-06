@@ -2,6 +2,7 @@ package com.z_soft.z_finance.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -37,8 +38,9 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     private List<T> nodeList;
     private final OnListFragmentInteractionListener tapListener;
-
     private Context context;
+
+    private Snackbar snackbar; // для возможности отменить удаление
 
     public TreeNodeAdapter(List<T> items, OnListFragmentInteractionListener listener, Context context) {
         nodeList = items;
@@ -125,7 +127,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 //        }
     }
 
-    private void initPopup(final ImageView btnPopup, final Context context, final T currentNode, final int position) {
+    private void initPopup(final ImageView btnPopup, final Context context, final T node, final int position) {
 
 
         btnPopup.setOnClickListener(new View.OnClickListener() {
@@ -158,8 +160,43 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            deleteNode((Source) currentNode, position, context); // удаляем из-базы и коллекции, обновляем список
+
+                                            // удаляем запись из коллекции (пока без удалении из базы)
+                                            nodeList.remove(node);
+                                            notifyItemRemoved(position);
+
+
+                                            // при удалении - сначала даем пользователю отменить действие с помощью SnackBar
+                                            snackbar = Snackbar.make(btnPopup, R.string.deleted, Snackbar.LENGTH_LONG);
+
+                                            snackbar.setAction(R.string.undo, new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {// если нажали на отмену удаления
+
+                                                    if (node.hasParent()) { // если это был дочерний элемент
+                                                        node.getParent().getChilds().add(position, node);// возвращаем обратно дочерний элемент
+                                                    } else { // это был корневой элемент
+                                                        nodeList.add(position, node);// возвращаем
+                                                    }
+
+                                                    notifyDataSetChanged();
+
+                                                }
+                                            }).addCallback(new Snackbar.Callback() {// для того, чтобы могли отловить момент, когда SnackBar исчезнет (т.е. ползователь не успел отменить удаление)
+
+                                                @Override
+                                                public void onDismissed(Snackbar snackbar, int event) {
+
+                                                    if (event != DISMISS_EVENT_ACTION) {// если не была нажата ссылка отмены
+                                                        deleteNode((Source) node, position, context); // удаляем из-базы и коллекции, обновляем список
+                                                    }
+
+                                                }
+                                            }).show();
+
+
                                         }
+
 
                                     })
 
@@ -177,7 +214,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                 });
 
                 // для записей, где есть дочерние элементы - делать пункт Удалить неактивным
-                if (currentNode.hasChilds()) {
+                if (node.hasChilds()) {
                     // TODO исправить антипаттерн magic number
                     dropDownMenu.getMenu().getItem(2).setEnabled(false);
                 }
