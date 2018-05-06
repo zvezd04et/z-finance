@@ -3,6 +3,9 @@ package com.z_soft.z_finance.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,49 +15,121 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.z_soft.z_finance.R;
+import com.z_soft.z_finance.adapters.TreeNodeAdapter;
+import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.fragments.SprListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener  {
 
+    private ImageView backIcon;
+    private  Toolbar toolbar;
+    private TextView toolbarTitle;
+
+    private TreeNode selectedNode;
+    private TreeNodeAdapter treeNodeAdapter;
+    //private SprListFragment sprListFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar();
+
+        //initFloatingButton();
+
+        initNavigationDrawer(toolbar);
+
+        RecyclerView rv = findViewById(R.id.spr_list_fragment);
+        treeNodeAdapter = (TreeNodeAdapter)rv.getAdapter();
+
+    }
+
+    private void initToolbar() {
+
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        toolbarTitle = findViewById(R.id.toolbar_title);
+        backIcon = findViewById(R.id.back_icon);
+
+        backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+
+                if (selectedNode.getParent()==null){// показать корневые элементы
+                    treeNodeAdapter.updateData(Initializer.getSourceManager().getAll());
+                    toolbarTitle.setText(R.string.sources);
+                    backIcon.setVisibility(View.INVISIBLE);
+                    selectedNode = null;
+                }else{// показать родительские элементы
+                    treeNodeAdapter.updateData(selectedNode.getParent().getChilds());//
+                    selectedNode = selectedNode.getParent();
+                    toolbarTitle.setText(selectedNode.getName());
+                }
+
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    }
+
+    private void initFloatingButton() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+    }
+
+    private void initNavigationDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+
+        if (selectedNode == null) {
+
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+
+            return;
         }
+
+        if (selectedNode.getParent() == null) {// показать корневые элементы
+
+            treeNodeAdapter.updateData(Initializer.getSourceManager().getAll());
+            toolbarTitle.setText(R.string.sources);
+            backIcon.setVisibility(View.INVISIBLE);
+            selectedNode = null;
+
+        } else {// показать родительские элементы
+            treeNodeAdapter.updateData(selectedNode.getParent().getChilds());//
+            selectedNode = selectedNode.getParent();
+            toolbarTitle.setText(selectedNode.getName());
+        }
+
+
     }
 
     @Override
@@ -105,7 +180,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(TreeNode item) {
+    public void onListFragmentInteraction(TreeNode selectedNode) {
+
+        this.selectedNode = selectedNode;
+        if (selectedNode.hasChilds()) {
+            toolbarTitle.setText(selectedNode.getName());// показывает выбранную категорию
+            backIcon.setVisibility(View.VISIBLE);
+        }
 
     }
 }

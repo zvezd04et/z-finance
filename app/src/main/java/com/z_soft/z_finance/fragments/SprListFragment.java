@@ -15,6 +15,8 @@ import com.z_soft.z_finance.adapters.TreeNodeAdapter;
 import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 
+import java.util.List;
+
 
 /**
  * A fragment representing a list of Items.
@@ -28,7 +30,9 @@ public class SprListFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener tapListener;
+    private TreeNodeAdapter treeNodeAdapter;
+    private List<? extends TreeNode> listNodes;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,27 +74,33 @@ public class SprListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new TreeNodeAdapter(Initializer.getSourceManager().getAll(), mListener));
+            recyclerView.setAdapter(treeNodeAdapter);
         }
         return view;
     }
 
+    public void updateData(List<? extends TreeNode> list){
+        treeNodeAdapter.updateData(list);
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            tapListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
+        listNodes = Initializer.getSourceManager().getAll();
+        treeNodeAdapter = new TreeNodeAdapter(listNodes, tapListener);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        tapListener = null;
     }
 
     /**
