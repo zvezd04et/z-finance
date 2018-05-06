@@ -17,4 +17,15 @@
     <string name="settings">Настройки</string>
     <string name="help">Справка</string>
 
+    <!--popup меню для справочников-->
+    <string name="add_sub">+ Подкатегория</string>
+    <string name="edit">+ Изменить</string>
+    <string name="delete">Удалить</string>
+
+    <string name="confirm">Подтверждение</string>
+    <string name="confirm_delete">Действительно хотите удалить?</string>
+    <string name="has_operations">Нельзя удалить запись, которая используется в операции</string>
+    <string name="deleted">Запись удалена</string>
+    <string name="undo">ОТМЕНИТЬ</string>
+
 </resources>

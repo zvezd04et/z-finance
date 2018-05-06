@@ -5,6 +5,7 @@ import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.dao.SourceDAO;
 import com.z_soft.z_finance.core.utils.ValueTree;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -98,14 +99,14 @@ public class SourceManager implements SourceDAO {
     }
 
     @Override
-    public boolean update(Source source) {
+    public boolean update (Source source) throws SQLException{
 
         return sourceDAO.update(source);
 
     }
 
     @Override
-    public boolean delete(Source source) {
+    public boolean delete(Source source) throws SQLException {
         // TODO добавить нужные Exceptions
         if (sourceDAO.delete(source)) {
             removeFromCollections(source);
@@ -140,7 +141,7 @@ public class SourceManager implements SourceDAO {
     }
 
     @Override
-    public boolean add(Source source) {
+    public boolean add(Source source) throws SQLException {
         if (sourceDAO.add(source)) {// если в БД добавился нормально
             addToCollections(source);
             return true;

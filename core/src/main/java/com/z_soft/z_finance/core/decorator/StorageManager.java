@@ -8,6 +8,7 @@ import com.z_soft.z_finance.core.interfaces.dao.StorageDAO;
 import com.z_soft.z_finance.core.utils.ValueTree;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
@@ -52,16 +53,16 @@ public class StorageManager implements StorageDAO {
 
     @Override
     // TODO подумать как сделать - сначала обновлять в базе, а потом уже в коллекции (либо - если в базе не обновилось - откатить изменения в объекте коллекции)
-    public boolean update(Storage storage) {
+    public boolean update(Storage storage) throws SQLException{
 
         return storageDAO.update(storage);
 
     }
 
     @Override
-    public boolean delete(Storage storage) {
+    public boolean delete(Storage storage) throws SQLException {
         // TODO добавить нужные Exceptions
-        if (storageDAO.delete(storage)) {
+        if (storageDAO.delete(storage))  {
             removeFromCollections(storage);
 
             return true;
@@ -93,7 +94,7 @@ public class StorageManager implements StorageDAO {
     }
 
     @Override
-    public boolean add(Storage storage) {
+    public boolean add(Storage storage) throws SQLException {
 
         if (storageDAO.add(storage)) {// если в БД добавилось нормально
             addToCollections(storage);

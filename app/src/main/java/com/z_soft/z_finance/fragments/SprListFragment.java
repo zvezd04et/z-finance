@@ -94,7 +94,7 @@ public class SprListFragment extends Fragment {
         }
 
         listNodes = Initializer.getSourceManager().getAll();
-        treeNodeAdapter = new TreeNodeAdapter(listNodes, tapListener);
+        treeNodeAdapter = new TreeNodeAdapter(listNodes, tapListener, context);
     }
 
     @Override

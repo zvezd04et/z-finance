@@ -24,6 +24,8 @@ import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.fragments.SprListFragment;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener  {
 
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        //drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
