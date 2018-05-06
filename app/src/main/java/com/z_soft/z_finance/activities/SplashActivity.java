@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.z_soft.z_finance.R;
-import com.z_soft.z_finance.app.DbConnection;
+import com.z_soft.z_finance.utils.DbConnection;
 
 public class SplashActivity extends AppCompatActivity {
 

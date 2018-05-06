@@ -3,7 +3,7 @@
     package="com.z_soft.z_finance">
 
     <application
-        android:name=".app.AppContext"
+        android:name=".utils.AppContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
