@@ -3,6 +3,7 @@ package com.z_soft.z_finance.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.adapters.TreeNodeAdapter;
 import com.z_soft.z_finance.core.database.Initializer;
+import com.z_soft.z_finance.core.enums.OperationType;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.fragments.SprListFragment;
 
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     private TreeNodeAdapter treeNodeAdapter;
     //private SprListFragment sprListFragment;
 
+    private TabLayout tabLayout;
+    private List<? extends TreeNode> list;// хранит корневые элементы списка
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,45 @@ public class MainActivity extends AppCompatActivity
         RecyclerView rv = findViewById(R.id.spr_list_fragment);
         treeNodeAdapter = (TreeNodeAdapter)rv.getAdapter();
 
+        initTabs();
+
+    }
+
+    private void initTabs() {
+
+        list = Initializer.getSourceManager().getAll();
+        tabLayout = findViewById(R.id.tabs);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()){
+                    case 0:// все
+                        list = Initializer.getSourceManager().getAll();
+                        break;
+                    case 1:// доход
+                        list = Initializer.getSourceManager().getList(OperationType.INCOME);
+                        break;
+                    case 2: // расход
+                        list = Initializer.getSourceManager().getList(OperationType.OUTCOME);
+                        break;
+                }
+
+                treeNodeAdapter.updateData(list);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void initToolbar() {
@@ -66,10 +109,13 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 if (selectedNode.getParent()==null){// показать корневые элементы
-                    treeNodeAdapter.updateData(Initializer.getSourceManager().getAll());
+
+
+                    treeNodeAdapter.updateData(list);
                     toolbarTitle.setText(R.string.sources);
                     backIcon.setVisibility(View.INVISIBLE);
                     selectedNode = null;
+
                 }else{// показать родительские элементы
                     treeNodeAdapter.updateData(selectedNode.getParent().getChilds());//
                     selectedNode = selectedNode.getParent();
@@ -96,7 +142,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -120,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         if (selectedNode.getParent() == null) {// показать корневые элементы
 
-            treeNodeAdapter.updateData(Initializer.getSourceManager().getAll());
+            treeNodeAdapter.updateData(list);
             toolbarTitle.setText(R.string.sources);
             backIcon.setVisibility(View.INVISIBLE);
             selectedNode = null;

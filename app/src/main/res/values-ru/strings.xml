@@ -28,4 +28,9 @@
     <string name="deleted">Запись удалена</string>
     <string name="undo">ОТМЕНИТЬ</string>
 
+    <!--TabItem для категорий-->
+    <string name="all">ВСЕ</string>
+    <string name="income">ДОХОД</string>
+    <string name="outcome">РАСХОД</string>
+
 </resources>

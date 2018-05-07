@@ -28,4 +28,9 @@
     <string name="deleted">Cancel delete?</string>
     <string name="undo">UNDO</string>
 
+    <!--TabItem для категорий-->
+    <string name="all">ALL</string>
+    <string name="income">INCOME</string>
+    <string name="outcome">OUTCOME</string>
+
 </resources>
