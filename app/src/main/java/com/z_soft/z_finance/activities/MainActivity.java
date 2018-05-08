@@ -1,5 +1,6 @@
 package com.z_soft.z_finance.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
+                toolbarTitle.setText(R.string.sources);
+                backIcon.setVisibility(View.INVISIBLE);
 
                 switch (tab.getPosition()){
                     case 0:// все
@@ -236,5 +240,16 @@ public class MainActivity extends AppCompatActivity
             backIcon.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == EditSourceActivity.REQUEST_NODE_EDIT) {// кто был инициатором вызова
+            if (resultCode == RESULT_OK){ // какой результат вернулся
+                treeNodeAdapter.updateNode((TreeNode)data.getSerializableExtra(EditSourceActivity.NODE_OBJECT));// отправляем на обновление измененный объект
+            }
+        }
     }
 }

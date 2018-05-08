@@ -1,7 +1,9 @@
 package com.z_soft.z_finance.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.z_soft.z_finance.R;
+import com.z_soft.z_finance.activities.EditSourceActivity;
 import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
@@ -39,6 +42,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
     private List<T> nodeList;
     private final OnListFragmentInteractionListener tapListener;
     private Context context;
+    private int currentEditPosition;
 
     private Snackbar snackbar; // для возможности отменить удаление
 
@@ -87,6 +91,8 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
                 if (treeNode.hasChilds()) {// если есть дочерние значения
                     updateData((List<T>) treeNode.getChilds());// показать дочек
+                }else{
+                    runEditActivity(context, treeNode, position);// если нет дочерних - открываем пункт для редактирования
                 }
 
             }
@@ -147,6 +153,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                         if (id == R.id.item_add) {
 
                         } else if (id == R.id.item_edit) {
+                            runEditActivity(context, node, position);
 
                         } else if (id == R.id.item_delete) {// если нажали пункт удаления
 
@@ -188,7 +195,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                                                 public void onDismissed(Snackbar snackbar, int event) {
 
                                                     if (event != DISMISS_EVENT_ACTION) {// если не была нажата ссылка отмены
-                                                        deleteNode((Source) node, position, context); // удаляем из-базы и коллекции, обновляем список
+                                                        deleteNode((Source) node, context); // удаляем из-базы и коллекции, обновляем список
                                                     }
 
                                                 }
@@ -225,9 +232,18 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     }
 
+    // вызвать активити для редактирования справочного значения и вернуть результат в основной активити
+    private void runEditActivity(Context context, T node, int position) {
+
+        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
+        intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
+        ((Activity)context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
+
+        currentEditPosition = position;
+    }
 
 //    // удаляет записи и обновляет список
-    private void deleteNode(Source node, int position, Context context) {
+    private void deleteNode(Source node, Context context) {
         try {
             Initializer.getSourceManager().delete(node);
             notifyDataSetChanged();// обновляем список
@@ -241,5 +257,15 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
             }
 
         }
+    }
+
+    public void updateNode(T node) {
+        try {
+            Initializer.getSourceManager().update((Source)node);
+            notifyItemChanged(currentEditPosition);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
     }
 }

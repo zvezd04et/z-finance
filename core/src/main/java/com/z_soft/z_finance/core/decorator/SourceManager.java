@@ -99,10 +99,15 @@ public class SourceManager implements SourceDAO {
     }
 
     @Override
-    public boolean update (Source source) throws SQLException{
+    public boolean update(Source source) throws SQLException {
+        if (sourceDAO.update(source)) {
 
-        return sourceDAO.update(source);
+            identityMap.get(source.getId()).setName(source.getName()); // данные обновлятся сразу во всех коллекциях, т.к. они ссылаются на один и тот же объект
+            // TODO также обновлять иконку
 
+            return true;
+        }
+        return false;
     }
 
     @Override

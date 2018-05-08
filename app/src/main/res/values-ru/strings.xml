@@ -33,4 +33,6 @@
     <string name="income">ДОХОД</string>
     <string name="outcome">РАСХОД</string>
 
+    <string name="name">Название</string>
+
 </resources>

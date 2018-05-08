@@ -32,5 +32,8 @@
     <string name="all">ALL</string>
     <string name="income">INCOME</string>
     <string name="outcome">OUTCOME</string>
+    <string name="title_activity_edit_source">EditSourceActivity</string>
+
+    <string name="name">Name</string>
 
 </resources>

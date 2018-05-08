@@ -1,12 +1,15 @@
 package com.z_soft.z_finance.core.interfaces;
 
+import java.io.Serializable;
 import java.util.List;
 
 // позволяет создать древовидную структуру из любого набора объектов, которые реализуют интерфейс TreeNode
 // паттерн "Компоновщик" - вольная реализация
-public interface TreeNode {
+public interface TreeNode extends Serializable{
 
     String getName();
+
+    void setName(String name);
 
     long getId(); // каждый элемент дерева должен иметь свой уникальный идентификатор
 
