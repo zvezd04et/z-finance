@@ -21,8 +21,10 @@ import android.widget.Toast;
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.EditSourceActivity;
 import com.z_soft.z_finance.core.database.Initializer;
+import com.z_soft.z_finance.core.impls.DefaultSource;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
+import com.z_soft.z_finance.fragments.SprListFragment;
 import com.z_soft.z_finance.fragments.SprListFragment.OnListFragmentInteractionListener;
 
 import java.sql.SQLException;
@@ -40,7 +42,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
     private static final String TAG = TreeNodeAdapter.class.getName();
 
     private List<T> nodeList;
-    private final OnListFragmentInteractionListener tapListener;
+    private final SprListFragment.OnListFragmentInteractionListener tapListener;
     private Context context;
     private int currentEditPosition;
 
@@ -85,7 +87,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                 // если был присвоен слушатель
                 if (tapListener != null) {
                     // уведомляем слушателя, что был нажат пункт из списка
-                    tapListener.onListFragmentInteraction(treeNode);// передаем, какой именно объект был нажат
+                    tapListener.onClickNode(treeNode);// передаем, какой именно объект был нажат
                 }
 
 
@@ -151,6 +153,12 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
                         // считываем, какой пункт нажали по его id
                         if (id == R.id.item_add) {
+
+                            Source source = new DefaultSource();
+                            source.setOperationType(((Source)node).getOperationType());
+
+                            tapListener.onPopupShow(node);
+                            runAddChildActivity(context, (T)source , position);
 
                         } else if (id == R.id.item_edit) {
                             runEditActivity(context, node, position);
@@ -232,6 +240,14 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     }
 
+    private void runAddChildActivity(Context context, T node, int position) {
+
+        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
+        intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
+        ((Activity)context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_ADD_CHILD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+
+    }
+
     // вызвать активити для редактирования справочного значения и вернуть результат в основной активити
     private void runEditActivity(Context context, T node, int position) {
 
@@ -256,6 +272,28 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                 Toast.makeText(context, R.string.has_operations, Toast.LENGTH_SHORT).show();
             }
 
+        }
+    }
+
+    public void insertNode(TreeNode node) {
+        try {
+            Source source = (Source)node;
+            Initializer.getSourceManager().add(source);
+            notifyDataSetChanged();
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public void insertChild(TreeNode node) {
+        try {
+            Source source = (Source)node;
+            Initializer.getSourceManager().add(source);
+            nodeList = (List<T>)node.getParent().getChilds(); // показываем список дочерних элементов, где только что добавили элемент
+            tapListener.onClickNode(node.getParent());
+            notifyDataSetChanged();
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 

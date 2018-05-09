@@ -36,4 +36,7 @@
 
     <string name="name">Name</string>
 
+    <string name="enter_value">Enter value</string>
+    <string name="type">Type</string>
+
 </resources>

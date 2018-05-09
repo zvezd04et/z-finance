@@ -36,21 +36,24 @@ public class DefaultSource extends AbstractTreeNode implements Source{
         this.operationType = operationType;
     }
 
+
     @Override
     public OperationType getOperationType() {
         return operationType;
     }
 
     public void setOperationType(OperationType operationType) {
-        this.operationType = operationType;
+        if (!hasParent()) {// если есть родитель - то оставить его OperationType - можно также выбрасывать исключение, если не совпадают типы
+            this.operationType = operationType;
+        }
     }
 
     @Override
     public void add(TreeNode child) {
 
-        //TODO поискать паттерны
-        //для дочернего элемента устанавливаем тип операции родительского элемента
-        if (child instanceof DefaultSource) {
+        // TODO применить паттерн
+        // для дочернего элемента устанавливаем тип операции родительского элемента
+        if (child instanceof DefaultSource){
             ((DefaultSource)child).setOperationType(operationType);
         }
 
@@ -64,6 +67,4 @@ public class DefaultSource extends AbstractTreeNode implements Source{
         }
         super.setParent(parent);
     }
-
-
 }

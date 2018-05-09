@@ -115,20 +115,24 @@ public class SourceDAOImpl implements SourceDAO {
     @Override
     // добавляет объект в БД и присваивает ему сгенерированный id
     public boolean add(Source source) {
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + SOURCE_TABLE + "(name, parent_id, operation_type_id) values(?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + SOURCE_TABLE + "(name, parent_id, operation_type_id) values(?,?,?)");
+             Statement stmtId = SQLiteConnection.getConnection().createStatement()
+        ) {
 
             stmt.setString(1, source.getName());
 
-            if (source.hasParent()){
+            if (source.hasParent()) {
                 stmt.setLong(2, source.getParent().getId());
-            }else{
+            } else {
                 stmt.setNull(2, Types.BIGINT);
             }
 
             stmt.setLong(3, source.getOperationType().getId());
 
             if (stmt.executeUpdate() == 1) {// если объект добавился нормально
-                try (ResultSet rs = stmt.getGeneratedKeys()) {// получаем id вставленной записи
+
+                try (ResultSet rs = stmtId.executeQuery("SELECT last_insert_rowid()");) {// получаем id вставленной записи
 
                     if (rs.next()) {
                         source.setId(rs.getLong(1));// не забываем просвоить новый id в объект

@@ -35,4 +35,7 @@
 
     <string name="name">Название</string>
 
+    <string name="enter_value">Введите значение</string>
+    <string name="type">Тип</string>
+
 </resources>

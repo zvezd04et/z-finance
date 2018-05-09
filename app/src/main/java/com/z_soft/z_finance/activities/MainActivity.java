@@ -2,11 +2,7 @@ package com.z_soft.z_finance.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,19 +20,27 @@ import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.adapters.TreeNodeAdapter;
 import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.enums.OperationType;
+import com.z_soft.z_finance.core.impls.DefaultSource;
+import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.fragments.SprListFragment;
 
 import java.util.List;
 
+import static com.z_soft.z_finance.activities.EditSourceActivity.NODE_OBJECT;
+import static com.z_soft.z_finance.activities.EditSourceActivity.REQUEST_NODE_ADD;
+import static com.z_soft.z_finance.activities.EditSourceActivity.REQUEST_NODE_EDIT;
+import static com.z_soft.z_finance.activities.EditSourceActivity.REQUEST_NODE_ADD_CHILD;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener  {
 
-    private ImageView backIcon;
-    private  Toolbar toolbar;
+    private ImageView iconBack;
+    private ImageView iconAdd;
+    private Toolbar toolbar;
     private TextView toolbarTitle;
 
-    private TreeNode selectedNode;
+    private TreeNode selectedParentNode;
     private TreeNodeAdapter treeNodeAdapter;
     //private SprListFragment sprListFragment;
 
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity
             public void onTabSelected(TabLayout.Tab tab) {
 
                 toolbarTitle.setText(R.string.sources);
-                backIcon.setVisibility(View.INVISIBLE);
+                iconBack.setVisibility(View.INVISIBLE);
 
                 switch (tab.getPosition()){
                     case 0:// все
@@ -106,25 +110,44 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         toolbarTitle = findViewById(R.id.toolbar_title);
-        backIcon = findViewById(R.id.back_icon);
+        iconBack = findViewById(R.id.ic_back_node);
+        iconAdd = findViewById(R.id.ic_add_node);
 
-        backIcon.setOnClickListener(new View.OnClickListener() {
+        iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (selectedNode.getParent()==null){// показать корневые элементы
+                if (selectedParentNode.getParent()==null){// показать корневые элементы
 
 
                     treeNodeAdapter.updateData(list);
                     toolbarTitle.setText(R.string.sources);
-                    backIcon.setVisibility(View.INVISIBLE);
-                    selectedNode = null;
+                    iconBack.setVisibility(View.INVISIBLE);
+                    selectedParentNode = null;
 
                 }else{// показать родительские элементы
-                    treeNodeAdapter.updateData(selectedNode.getParent().getChilds());//
-                    selectedNode = selectedNode.getParent();
-                    toolbarTitle.setText(selectedNode.getName());
+                    treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds());//
+                    selectedParentNode = selectedParentNode.getParent();
+                    toolbarTitle.setText(selectedParentNode.getName());
                 }
+
+            }
+        });
+
+        // при нажатии на кнопку добавления элемента
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Source source = new DefaultSource();
+
+                if (selectedParentNode != null) {// если мы находимся в родительском элементе - передать тип
+                    source.setOperationType(((Source) selectedParentNode).getOperationType());
+                }
+
+                Intent intent = new Intent(MainActivity.this, EditSourceActivity.class); // какой акивити хоти вызвать
+                intent.putExtra(NODE_OBJECT, source); // помещаем выбранный объект node для передачи в активити
+                startActivityForResult(intent, REQUEST_NODE_ADD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
 
             }
         });
@@ -156,7 +179,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        if (selectedNode == null) {
+        if (selectedParentNode == null) {
 
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -168,17 +191,17 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if (selectedNode.getParent() == null) {// показать корневые элементы
+        if (selectedParentNode.getParent() == null) {// показать корневые элементы
 
             treeNodeAdapter.updateData(list);
             toolbarTitle.setText(R.string.sources);
-            backIcon.setVisibility(View.INVISIBLE);
-            selectedNode = null;
+            iconBack.setVisibility(View.INVISIBLE);
+            selectedParentNode = null;
 
         } else {// показать родительские элементы
-            treeNodeAdapter.updateData(selectedNode.getParent().getChilds());//
-            selectedNode = selectedNode.getParent();
-            toolbarTitle.setText(selectedNode.getName());
+            treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds());//
+            selectedParentNode = selectedParentNode.getParent();
+            toolbarTitle.setText(selectedParentNode.getName());
         }
 
 
@@ -187,7 +210,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -232,24 +255,56 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(TreeNode selectedNode) {
+    public void onClickNode(TreeNode selectedParentNode) {// при каждом нажатии на элемент списка - срабатывает этот слушатель событий - записывает выбранный node
 
-        this.selectedNode = selectedNode;
-        if (selectedNode.hasChilds()) {
-            toolbarTitle.setText(selectedNode.getName());// показывает выбранную категорию
-            backIcon.setVisibility(View.VISIBLE);
+        if (selectedParentNode.hasChilds()) {
+            this.selectedParentNode = selectedParentNode;// в selectedParentNode хранится ссылка на выбранную родительскую категорию
+            toolbarTitle.setText(selectedParentNode.getName());// показывает выбранную категорию
+            iconBack.setVisibility(View.VISIBLE);
         }
-
     }
+
+    @Override
+    public void onPopupShow(TreeNode selectedParentNode) {
+        this.selectedParentNode = selectedParentNode;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EditSourceActivity.REQUEST_NODE_EDIT) {// кто был инициатором вызова
-            if (resultCode == RESULT_OK){ // какой результат вернулся
-                treeNodeAdapter.updateNode((TreeNode)data.getSerializableExtra(EditSourceActivity.NODE_OBJECT));// отправляем на обновление измененный объект
+        TreeNode node = null;
+
+        if (resultCode == RESULT_OK) {
+
+            switch (requestCode) {
+                case REQUEST_NODE_EDIT:
+                    treeNodeAdapter.updateNode((TreeNode) data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
+                    break;
+
+                case REQUEST_NODE_ADD:
+                    node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
+
+                    if (selectedParentNode != null) {// если создаем дочерний элемент, а не корневой
+                        node.setParent(selectedParentNode);// setParent нужно выполнять, когда объект уже вернулся из активити
+                    }
+
+                    treeNodeAdapter.insertNode(node);// отправляем на добавление новый объект
+                    break;
+
+                case REQUEST_NODE_ADD_CHILD:
+
+                    node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
+                    node.setParent(selectedParentNode);
+
+                    treeNodeAdapter.insertChild(node);// отправляем на добавление новый объект
+                    break;
+
+
             }
+
         }
+
     }
 }

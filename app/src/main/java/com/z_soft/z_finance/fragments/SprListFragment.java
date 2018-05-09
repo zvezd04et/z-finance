@@ -113,8 +113,8 @@ public class SprListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(TreeNode item);
+    public interface OnListFragmentInteractionListener { // интерфейс для слушателя события при нажатии записи списка
+        void onClickNode(TreeNode selectedNode);
+        void onPopupShow(TreeNode selectedNode);
     }
 }
