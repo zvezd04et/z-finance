@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -29,9 +31,10 @@ import com.z_soft.z_finance.fragments.SprListFragment;
 import com.z_soft.z_finance.fragments.SprListFragment.OnListFragmentInteractionListener;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.constraint.Constraints.TAG;
+import jp.wasabeef.recyclerview.animators.BaseItemAnimator;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link TreeNode} and makes a call to the
@@ -42,30 +45,118 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     private static final String TAG = TreeNodeAdapter.class.getName();
 
-    private List<T> nodeList;
-    private final SprListFragment.OnListFragmentInteractionListener tapListener;
+    private RecyclerView recyclerView; // нужен для установки анимации
+
+    private List<T> adapterList = new ArrayList<>(); // текущая обновляемая коллекция адаптера - заполняется только нужными объектами для показа в списке
+
+    private final SprListFragment.OnListFragmentInteractionListener listener;
     private Context context;
     private int currentEditPosition;
 
+    public static BaseItemAnimator animatorChilds; // анимация при открытии дочерних элементов (справа налево)
+    public static BaseItemAnimator animatorParents; // анимация при открытии родительских элементов (слево направо)
+
     private Snackbar snackbar; // для возможности отменить удаление
 
-    public TreeNodeAdapter(List<T> items, OnListFragmentInteractionListener listener, Context context) {
-        nodeList = items;
-        tapListener = listener;
+    public TreeNodeAdapter(List<T> list, OnListFragmentInteractionListener listener, Context context) {
+        adapterList.clear();
+        adapterList.addAll(list);
+
+        this.listener = listener;
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        snackbar = Snackbar.make(parent, R.string.deleted, Snackbar.LENGTH_LONG); // создаем один раз - для возможности отменить удаление
+
+        recyclerView = (RecyclerView) parent; // нужен для установки анимации
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.spr_node, parent, false);
+
+
+        createAnimations();
+
         return new ViewHolder(view);
+    }
+
+    // создание нужных объетов анимации, которые будут использоваться в зависимости от того, куда переходим (родительские или дочерние списки)
+    private void createAnimations() {
+
+        animatorParents = new BaseItemAnimator() {
+
+            @Override
+            protected void animateRemoveImpl(final RecyclerView.ViewHolder holder) {
+                ViewCompat.animate(holder.itemView)
+                        .translationX(holder.itemView.getRootView().getWidth())
+                        .setDuration(getRemoveDuration())
+                        .setInterpolator(mInterpolator)
+                        .setListener(new DefaultRemoveVpaListener(holder))
+                        .setStartDelay(getRemoveDelay(holder))
+                        .start();
+            }
+
+            @Override
+            protected void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
+                ViewCompat.setTranslationX(holder.itemView, -holder.itemView.getRootView().getWidth());
+            }
+
+            @Override
+            protected void animateAddImpl(final RecyclerView.ViewHolder holder) {
+                ViewCompat.animate(holder.itemView)
+                        .translationX(0)
+                        .setDuration(getAddDuration())
+                        .setInterpolator(mInterpolator)
+                        .setListener(new DefaultAddVpaListener(holder))
+                        .setStartDelay(getAddDelay(holder))
+                        .start();
+            }
+        };
+
+
+        animatorChilds = new BaseItemAnimator() {
+
+
+            @Override
+            protected void animateRemoveImpl(final RecyclerView.ViewHolder holder) {
+
+                ViewCompat.animate(holder.itemView)
+                        .translationX(-holder.itemView.getRootView().getWidth())
+                        .setDuration(getRemoveDuration())
+                        .setInterpolator(mInterpolator)
+                        .setListener(new DefaultRemoveVpaListener(holder))
+                        .setStartDelay(getRemoveDelay(holder))
+                        .start();
+
+            }
+
+            @Override
+            protected void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
+                ViewCompat.setTranslationX(holder.itemView, holder.itemView.getRootView().getWidth());
+            }
+
+            @Override
+            protected void animateAddImpl(final RecyclerView.ViewHolder holder) {
+                ViewCompat.animate(holder.itemView)
+                        .translationX(0)
+                        .setDuration(getAddDuration())
+                        .setInterpolator(mInterpolator)
+                        .setListener(new DefaultAddVpaListener(holder))
+                        .setStartDelay(getAddDelay(holder))
+                        .start();
+            }
+
+
+        };
+
     }
 
     @Override
     public void onBindViewHolder(final TreeNodeAdapter.ViewHolder holder, final int position) {// вызывается для каждой записи списка
 
-        T node = nodeList.get(position);// определяем выбранный пункт
+        final T node = adapterList.get(position);// определяем выбранный пункт
         holder.tvSprName.setText(node.getName());
 
         // показать кол-во дочерних элементов, если они есть
@@ -85,19 +176,19 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         holder.layoutMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                T treeNode = nodeList.get(position);// определяем объект
+                T treeNode = adapterList.get(position);// определяем объект
 
                 // если был присвоен слушатель
-                if (tapListener != null) {
+                if (listener != null) {
                     // уведомляем слушателя, что был нажат пункт из списка
-                    tapListener.onClickNode(treeNode);// передаем, какой именно объект был нажат
+                    listener.onClickNode(treeNode);// передаем, какой именно объект был нажат
                 }
 
 
                 if (treeNode.hasChilds()) {// если есть дочерние значения
-                    updateData((List<T>) treeNode.getChilds());// показать дочек
-                }else{
-                    runEditActivity(context, treeNode, position);// если нет дочерних - открываем пункт для редактирования
+                    updateData((List<T>) treeNode.getChilds(), animatorChilds);// показать дочек
+                } else {
+                    runActivity(context, node, EditSourceActivity.REQUEST_NODE_EDIT);// если нет дочерних - открываем пункт для редактирования
                 }
 
             }
@@ -106,12 +197,27 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     @Override
     public int getItemCount() {
-        return nodeList.size();
+        return adapterList.size();
     }
 
-    public void updateData(List<T> nodeList){
-        this.nodeList = nodeList;
-        notifyDataSetChanged();
+    // метод обновления данных может вызываться из фрагмента, где используется данный адаптер
+    public void updateData(final List<T> list, RecyclerView.ItemAnimator animator) {
+
+        if (snackbar.isShown()) {
+            hideSnackBar();
+        }
+
+        // ставит требумую анимацию для перехода (в зависимости от того, какие элементы открываем, дочерние или родительские)
+        recyclerView.setItemAnimator(animator);
+
+
+        int range = adapterList.size();
+        adapterList.clear();
+        notifyItemRangeRemoved(0, range);
+
+
+        adapterList.addAll(list);
+        notifyItemRangeInserted(0, adapterList.size());
 
     }
 
@@ -137,13 +243,14 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 //            return super.toString() + " '" + mContentView.getText() + "'";
 //        }
     }
-
     private void initPopup(final ImageView btnPopup, final Context context, final T node, final int position) {
 
 
         btnPopup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                hideSnackBar();
 
                 // при нажатии на каждый пункт - формируем отдельный объект контекстного меню
                 PopupMenu dropDownMenu = new PopupMenu(context, btnPopup); // btnPopup - чтобы знал кто источник нажатия, для правильного расположения меню
@@ -155,16 +262,17 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                         int id = menuItem.getItemId();
 
                         // считываем, какой пункт нажали по его id
-                        if (id == R.id.item_add) {
+                        if (id == R.id.item_child_add) {
 
                             Source source = new DefaultSource();
-                            source.setOperationType(((Source)node).getOperationType());
+                            source.setOperationType(((Source) node).getOperationType());
 
-                            tapListener.onPopupShow(node);
-                            runAddChildActivity(context, (T)source , position);
+                            listener.onPopupShow(node);
+                            runActivity(context, (T) source, EditSourceActivity.REQUEST_NODE_ADD_CHILD);
 
                         } else if (id == R.id.item_edit) {
-                            runEditActivity(context, node, position);
+                            currentEditPosition = position;
+                            runActivity(context, node, EditSourceActivity.REQUEST_NODE_EDIT);
 
                         } else if (id == R.id.item_delete) {// если нажали пункт удаления
 
@@ -176,37 +284,29 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                                     // слушатель для кнопки ОК
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                                        @Override
                                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                                            // удаляем запись из коллекции (пока без удалении из базы)
-                                            nodeList.remove(node);
+                                            // сначала удаляем запись просто из текушей коллекции адаптера (без удалении из базы) - даем сначала пользователю шанс отменить
+                                            adapterList.remove(node);
                                             notifyItemRemoved(position);
 
 
-                                            // при удалении - сначала даем пользователю отменить действие с помощью SnackBar
-                                            snackbar = Snackbar.make(btnPopup, R.string.deleted, Snackbar.LENGTH_LONG);
-
+                                            // показываем Snackbar, чтобы дать пользователю возможность отменить действие
                                             snackbar.setAction(R.string.undo, new View.OnClickListener() {
                                                 @Override
-                                                public void onClick(View v) {// если нажали на отмену удаления
+                                                public void onClick(View v) {// если нажали на ссылку ОТМЕНИТЬ
 
-                                                    if (node.hasParent()) { // если это был дочерний элемент
-                                                        node.getParent().getChilds().add(position, node);// возвращаем обратно дочерний элемент
-                                                    } else { // это был корневой элемент
-                                                        nodeList.add(position, node);// возвращаем
-                                                    }
-
-                                                    notifyDataSetChanged();
+                                                    adapterList.add(position, node);// возвращаем обратно
+                                                    notifyItemInserted(position);
 
                                                 }
-                                            }).addCallback(new Snackbar.Callback() {// для того, чтобы могли отловить момент, когда SnackBar исчезнет (т.е. ползователь не успел отменить удаление)
+                                            }).setCallback(new Snackbar.Callback() {// для того, чтобы могли отловить момент, когда SnackBar исчезнет (т.е. ползователь не успел отменить удаление)
 
                                                 @Override
                                                 public void onDismissed(Snackbar snackbar, int event) {
 
                                                     if (event != DISMISS_EVENT_ACTION) {// если не была нажата ссылка отмены
-                                                        deleteNode((Source) node, context); // удаляем из-базы и коллекции, обновляем список
+                                                        deleteNode((Source) node); // удаляем из-базы и коллекции, обновляем список
                                                     }
 
                                                 }
@@ -220,7 +320,6 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
                                     // слушатель для кнопки отмены
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        @Override
                                         public void onClick(DialogInterface dialog, int id) {
                                             dialog.cancel();// если нажали отмену - просто закрываем диалоговое окно
                                         }
@@ -243,29 +342,36 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     }
 
-    private void runAddChildActivity(Context context, T node, int position) {
-
-        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
-        intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
-        ((Activity)context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_ADD_CHILD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+    // закрыть snackbar, если в данный момент открыт
+    private void hideSnackBar() {
+        if (snackbar.isShown()) {
+            snackbar.dismiss();
+        }
 
     }
 
-    // вызвать активити для редактирования справочного значения и вернуть результат в основной активити
-    private void runEditActivity(Context context, T node, int position) {
 
-        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
+    // открываем активити для создания или редактирования элемента (параметр requestCode)
+    private void runActivity(Context context, T node, int requestCode) {
+        hideSnackBar();
+        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хотим вызвать
         intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
-        ((Activity)context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
-
-        currentEditPosition = position;
+        ((Activity) context).startActivityForResult(intent, requestCode,
+                ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context).toBundle()); // устанавливаем анимацию перехода
     }
 
-//    // удаляет записи и обновляет список
-    private void deleteNode(Source node, Context context) {
+
+
+    // удаляет записи и обновляет список
+    private boolean deleteNode(Source node) {
         try {
+
+            // ранее уже удалили запись из списка - поэтому не вызываем  notifyItemRemoved(position), а просто удаляем из БД
             Initializer.getSourceManager().delete(node);
-            notifyDataSetChanged();// обновляем список
+
+            notifyDataSetChanged(); // этот метод также нужен, если пользователь нажмет отмену удаления и успеет перейти в другой список
+
+            return true;
 
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
@@ -276,33 +382,44 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
             }
 
         }
+
+        return false;
     }
 
-    public void insertNode(TreeNode node) {
+    // вставка нового корневого элемента
+    public void insertRootNode(T node) {
         try {
-            Source source = (Source)node;
-            Initializer.getSourceManager().add(source);
-            notifyDataSetChanged();
+            Source source = (Source) node;
+            Initializer.getSourceManager().add(source);// сначала вставляем в БД и общую коллекцию
+            adapterList.add(node); // потом - в текущую временную коллекцию адаптера
+            notifyItemInserted(adapterList.size());// вставка в последнюю позицию
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
-    public void insertChild(TreeNode node) {
+    // вставка дочернего элемента
+    public void insertChildNode(TreeNode node) {
         try {
-            Source source = (Source)node;
+            Source source = (Source) node;
             Initializer.getSourceManager().add(source);
-            nodeList = (List<T>)node.getParent().getChilds(); // показываем список дочерних элементов, где только что добавили элемент
-            tapListener.onClickNode(node.getParent());
-            notifyDataSetChanged();
+
+            List<T> list = (List<T>) node.getParent().getChilds();
+
+            updateData(list, animatorChilds);  // показываем список дочерних элементов, где только что добавили элемент
+
+            listener.onClickNode(node.getParent());
+
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
+
+    // обновление значения
     public void updateNode(T node) {
         try {
-            Initializer.getSourceManager().update((Source)node);
+            Initializer.getSourceManager().update((Source) node);
             notifyItemChanged(currentEditPosition);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());

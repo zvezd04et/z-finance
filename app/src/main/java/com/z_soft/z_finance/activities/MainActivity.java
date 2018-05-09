@@ -3,6 +3,8 @@ package com.z_soft.z_finance.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     private TreeNodeAdapter treeNodeAdapter;
 
     private TabLayout tabLayout;
-    private List<? extends TreeNode> list;// хранит корневые элементы списка
+    private List<? extends TreeNode> currentList;// хранит корневые элементы списка
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initTabs() {
 
-        list = Initializer.getSourceManager().getAll();
+        currentList = Initializer.getSourceManager().getAll();
         tabLayout = findViewById(R.id.tabs);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -78,20 +80,20 @@ public class MainActivity extends AppCompatActivity
 
                 switch (tab.getPosition()){
                     case 0:// все
-                        list = Initializer.getSourceManager().getAll();
+                        currentList = Initializer.getSourceManager().getAll();
                         defaultType = null;
                         break;
                     case 1:// доход
-                        list = Initializer.getSourceManager().getList(OperationType.INCOME);
+                        currentList = Initializer.getSourceManager().getList(OperationType.INCOME);
                         defaultType = OperationType.INCOME;
                         break;
                     case 2: // расход
-                        list = Initializer.getSourceManager().getList(OperationType.OUTCOME);
+                        currentList = Initializer.getSourceManager().getList(OperationType.OUTCOME);
                         defaultType = OperationType.OUTCOME;
                         break;
                 }
 
-                treeNodeAdapter.updateData(list);
+                treeNodeAdapter.updateData(currentList, treeNodeAdapter.animatorParents);
 
             }
 
@@ -123,13 +125,13 @@ public class MainActivity extends AppCompatActivity
                 if (selectedParentNode.getParent()==null){// показать корневые элементы
 
 
-                    treeNodeAdapter.updateData(list);
+                    treeNodeAdapter.updateData(currentList, treeNodeAdapter.animatorParents);
                     toolbarTitle.setText(R.string.sources);
                     iconBack.setVisibility(View.INVISIBLE);
                     selectedParentNode = null;
 
                 }else{// показать родительские элементы
-                    treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds());//
+                    treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds(), treeNodeAdapter.animatorParents);//
                     selectedParentNode = selectedParentNode.getParent();
                     toolbarTitle.setText(selectedParentNode.getName());
                 }
@@ -149,9 +151,10 @@ public class MainActivity extends AppCompatActivity
                     source.setOperationType(defaultType);
                 }
 
+
                 Intent intent = new Intent(MainActivity.this, EditSourceActivity.class); // какой акивити хоти вызвать
                 intent.putExtra(NODE_OBJECT, source); // помещаем выбранный объект node для передачи в активити
-                startActivityForResult(intent, REQUEST_NODE_ADD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+                ActivityCompat.startActivityForResult(MainActivity.this,intent, REQUEST_NODE_ADD, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this).toBundle()); // REQUEST_NODE_EDIT - индикатор, кто является инициатором); // REQUEST_NODE_ADD - индикатор, кто является инициатором
 
             }
         });
@@ -197,13 +200,13 @@ public class MainActivity extends AppCompatActivity
 
         if (selectedParentNode.getParent() == null) {// показать корневые элементы
 
-            treeNodeAdapter.updateData(list);
+            treeNodeAdapter.updateData(currentList, treeNodeAdapter.animatorParents);
             toolbarTitle.setText(R.string.sources);
             iconBack.setVisibility(View.INVISIBLE);
             selectedParentNode = null;
 
         } else {// показать родительские элементы
-            treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds());//
+            treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds(), treeNodeAdapter.animatorParents);//
             selectedParentNode = selectedParentNode.getParent();
             toolbarTitle.setText(selectedParentNode.getName());
         }
@@ -294,7 +297,7 @@ public class MainActivity extends AppCompatActivity
                         node.setParent(selectedParentNode);// setParent нужно выполнять, когда объект уже вернулся из активити
                     }
 
-                    treeNodeAdapter.insertNode(node);// отправляем на добавление новый объект
+                    treeNodeAdapter.insertRootNode(node);// отправляем на добавление новый объект
                     break;
 
                 case REQUEST_NODE_ADD_CHILD:
@@ -302,7 +305,7 @@ public class MainActivity extends AppCompatActivity
                     node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
                     node.setParent(selectedParentNode);
 
-                    treeNodeAdapter.insertChild(node);// отправляем на добавление новый объект
+                    treeNodeAdapter.insertChildNode(node);// отправляем на добавление новый объект
                     break;
 
 

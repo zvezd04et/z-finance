@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -41,6 +44,8 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_source);
+
+        setupAnimation();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_edit_source);
         etName = (EditText) findViewById(R.id.et_source_name);
@@ -101,7 +106,7 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
                 }
 
 
-                finish();// закрыть активити
+                finishWithTransition();// закрыть активити
 
             }
         });
@@ -110,9 +115,30 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                finishWithTransition();
             }
         });
+
+    }
+
+    private void finishWithTransition() {
+        ActivityCompat.finishAfterTransition(EditSourceActivity.this);
+    }
+
+
+    private void setupAnimation() {
+
+        // при открытии активити
+        Slide slide = new Slide(Gravity.BOTTOM);
+        slide.setDuration(300);
+        getWindow().setEnterTransition(slide);
+
+        // при закрытии активити
+        Slide slide2 = new Slide(Gravity.TOP);
+        slide2.setDuration(500);
+        getWindow().setExitTransition(slide2);
+
+
 
     }
 

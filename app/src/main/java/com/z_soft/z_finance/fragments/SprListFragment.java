@@ -86,9 +86,9 @@ public class SprListFragment extends Fragment {
         return view;
     }
 
-    public void updateData(List<? extends TreeNode> list){
-        treeNodeAdapter.updateData(list);
-    }
+//    public void updateData(List<? extends TreeNode> list){
+//        treeNodeAdapter.updateData(list);
+//    }
 
     @Override
     public void onAttach(Context context) {
