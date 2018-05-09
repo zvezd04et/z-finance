@@ -6,8 +6,8 @@
     android:name="com.z_soft.z_finance.fragments.TreeNodeFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="@dimen/divider_right_margin"
+    android:layout_marginRight="@dimen/divider_right_margin"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context=".fragments.SprListFragment"
     tools:listitem="@layout/spr_node" />

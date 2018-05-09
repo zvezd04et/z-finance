@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -68,10 +69,12 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         holder.tvSprName.setText(node.getName());
 
         // показать кол-во дочерних элементов, если они есть
-        if (node.getChilds() != null && !node.getChilds().isEmpty()) {
+        if (node.hasChilds()) {
             holder.tvChildCount.setText(String.valueOf(node.getChilds().size()));
+            holder.tvChildCount.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         } else {
             holder.tvChildCount.setText("");
+            holder.tvChildCount.setBackground(null);// чтобы не рисовал пустую закрашенную область
         }
 
         // для каждого пункта формируем слушатель
@@ -123,9 +126,9 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         public ViewHolder(View view) {
             super(view);
             //mView = view;
-            tvSprName = view.findViewById(R.id.spr_name);
+            tvSprName = view.findViewById(R.id.tv_node_name);
             layoutMain = (LinearLayout) view.findViewById(R.id.spr_main_layout);
-            tvChildCount = view.findViewById(R.id.spr_child_count);
+            tvChildCount = view.findViewById(R.id.tv_node_child_count);
             btnPopup = view.findViewById(R.id.spr_popup_button);
         }
 

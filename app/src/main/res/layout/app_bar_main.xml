@@ -32,10 +32,12 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="left"
-                    android:paddingLeft="10dp"
-                    android:src="@android:drawable/ic_menu_revert"
-
-                    android:visibility="invisible" />
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="true"
+                    android:paddingLeft="@dimen/divider_right_margin"
+                    android:tint="@color/colorText"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_arrow_back" />
 
 
                 <TextView
@@ -55,7 +57,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingRight="10dp"
-                    android:src="@android:drawable/ic_menu_add" />
+                    android:tint="@color/colorText"
+                    app:srcCompat="@drawable/ic_add" />
 
             </RelativeLayout>
 

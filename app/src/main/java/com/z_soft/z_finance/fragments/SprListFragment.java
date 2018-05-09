@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.adapters.TreeNodeAdapter;
 import com.z_soft.z_finance.core.database.Initializer;
@@ -74,6 +75,12 @@ public class SprListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
+            // добавить разделитель между элементами списка
+            recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+                    .marginResId(R.dimen.divider_left_margin, R.dimen.divider_right_margin)
+                    .build());
+
             recyclerView.setAdapter(treeNodeAdapter);
         }
         return view;
