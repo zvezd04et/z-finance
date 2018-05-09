@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,8 +29,10 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
     public final static int REQUEST_NODE_ADD_CHILD = 103;
 
     private Toolbar toolbar;
-    private TextView etName;
+    private EditText etName;
+    private TextView tvNodeName;
     private ImageView imgSave;
+    private ImageView imgClose;
     private Spinner spSourceType;
     private ArrayAdapter<OperationType> spAdapter;
 
@@ -39,10 +42,13 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_source);
 
-        toolbar = findViewById(R.id.toolbar_edit_source);
-        etName = findViewById(R.id.et_source_name);
-        imgSave = findViewById(R.id.img_node_save);
-        spSourceType = findViewById(R.id.sp_source_type);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_edit_source);
+        etName = (EditText) findViewById(R.id.et_source_name);
+        tvNodeName = (TextView) findViewById(R.id.tv_node_name);
+        imgSave = (ImageView) findViewById(R.id.img_node_save);
+        imgClose = (ImageView) findViewById(R.id.img_node_close);
+        spSourceType = (Spinner) findViewById(R.id.sp_source_type);
+
 
         spAdapter = new ArrayAdapter<OperationType>(this, android.R.layout.simple_spinner_item, OperationType.getList().subList(0,2));// нам нужны только доход и расход для категорий
 
@@ -52,7 +58,15 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
 
         final T node = (T) getIntent().getSerializableExtra(NODE_OBJECT); // получаем переданный объект для редактирования
 
-        etName.setText(node.getName());
+        // в зависимости от типа действия (создание или редактирование) - меняем заголовок
+        if (node.getName()!=null){
+            tvNodeName.setText(R.string.editing);
+            etName.setText(node.getName());
+        }else{
+            tvNodeName.setText(R.string.adding);
+            etName.setText("");
+
+        }
 
 
         if (node.getOperationType()!=null) {// при редактировании объекта - это поле будет заполнено
@@ -60,7 +74,7 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
             spSourceType.setSelection(OperationType.getList().indexOf(node.getOperationType()));
         }
 
-
+        // слушатель события при сохранении
         imgSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,8 +100,17 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity{
 
                 }
 
+
                 finish();// закрыть активити
 
+            }
+        });
+
+        // слушатель события при отмене
+        imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

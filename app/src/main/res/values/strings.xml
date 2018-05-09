@@ -39,4 +39,9 @@
     <string name="enter_value">Enter value</string>
     <string name="type">Type</string>
 
+    <string name="editing">Edit</string>
+    <string name="adding">Add</string>
+
+    <string name="icon">Icon</string>
+
 </resources>

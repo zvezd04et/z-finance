@@ -18,7 +18,8 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_weight="1"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+            android:tint="@color/colorGray"
+            app:srcCompat="@drawable/ic_empty" />
 
         <TextView
             android:id="@+id/tv_node_name"

@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity
     private TextView toolbarTitle;
 
     private TreeNode selectedParentNode;
+    private OperationType defaultType;// для автоматического проставления типа при создании нового элемента
     private TreeNodeAdapter treeNodeAdapter;
-    //private SprListFragment sprListFragment;
 
     private TabLayout tabLayout;
     private List<? extends TreeNode> list;// хранит корневые элементы списка
@@ -79,12 +79,15 @@ public class MainActivity extends AppCompatActivity
                 switch (tab.getPosition()){
                     case 0:// все
                         list = Initializer.getSourceManager().getAll();
+                        defaultType = null;
                         break;
                     case 1:// доход
                         list = Initializer.getSourceManager().getList(OperationType.INCOME);
+                        defaultType = OperationType.INCOME;
                         break;
                     case 2: // расход
                         list = Initializer.getSourceManager().getList(OperationType.OUTCOME);
+                        defaultType = OperationType.OUTCOME;
                         break;
                 }
 
@@ -141,8 +144,9 @@ public class MainActivity extends AppCompatActivity
 
                 Source source = new DefaultSource();
 
-                if (selectedParentNode != null) {// если мы находимся в родительском элементе - передать тип
-                    source.setOperationType(((Source) selectedParentNode).getOperationType());
+                // если пользователь выбрал таб и создает новый элемент - сразу прописываем тип
+                if (defaultType!=null){
+                    source.setOperationType(defaultType);
                 }
 
                 Intent intent = new Intent(MainActivity.this, EditSourceActivity.class); // какой акивити хоти вызвать

@@ -38,4 +38,9 @@
     <string name="enter_value">Введите значение</string>
     <string name="type">Тип</string>
 
+    <string name="editing">Редактирование</string>
+    <string name="adding">Добавление</string>
+
+    <string name="icon">Иконка</string>
+
 </resources>

@@ -22,7 +22,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:baselineAligned="false">
 
                 <ImageView
@@ -32,12 +31,10 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="left"
-                    android:adjustViewBounds="false"
-                    android:cropToPadding="true"
-                    android:paddingLeft="@dimen/divider_right_margin"
                     android:tint="@color/colorText"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/ic_arrow_back" />
+                    android:src="@drawable/ic_arrow_back"
+
+                    android:visibility="invisible" />
 
 
                 <TextView
@@ -47,8 +44,11 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:paddingRight="40dp"
                     android:gravity="center"
-                    android:text="@string/sources" />
+                    android:text="@string/sources"
+                    android:textAppearance="@android:style/TextAppearance.Material.Title"
+                    />
 
                 <ImageView
                     android:id="@+id/ic_add_node"
@@ -58,7 +58,7 @@
                     android:layout_centerVertical="true"
                     android:paddingRight="10dp"
                     android:tint="@color/colorText"
-                    app:srcCompat="@drawable/ic_add" />
+                    android:src="@drawable/ic_add" />
 
             </RelativeLayout>
 
@@ -98,12 +98,13 @@
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:visibility="invisible"-->
+        <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
 </android.support.design.widget.CoordinatorLayout>
