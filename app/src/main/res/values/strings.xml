@@ -29,9 +29,9 @@
     <string name="undo">UNDO</string>
 
     <!--TabItem для категорий-->
-    <string name="all">ALL</string>
-    <string name="income">INCOME</string>
-    <string name="outcome">OUTCOME</string>
+    <string name="tab_all">ALL</string>
+    <string name="tab_income">INCOME</string>
+    <string name="tab_outcome">OUTCOME</string>
     <string name="title_activity_edit_source">EditSourceActivity</string>
 
     <string name="name">Name</string>
@@ -39,9 +39,18 @@
     <string name="enter_value">Enter value</string>
     <string name="type">Type</string>
 
+    <string name="income">Income</string>
+    <string name="outcome">Outcome</string>
+    <string name="transfer">Transfer</string>
+    <string name="convert">Convert</string>
+
     <string name="editing">Edit</string>
     <string name="adding">Add</string>
 
     <string name="icon">Icon</string>
+
+    <string name="select_icon">Select icon</string>
+
+    <string name="title_activity_select_icon">SelectIconActivity</string>
 
 </resources>

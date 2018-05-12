@@ -12,6 +12,7 @@ public class AbstractTreeNode implements TreeNode {
     private TreeNode parent;
     private String name;
     private long parentId;
+    private String iconName;
 
     public AbstractTreeNode() {
     }
@@ -40,6 +41,16 @@ public class AbstractTreeNode implements TreeNode {
     public void add(TreeNode child) {
         child.setParent(this);
         childs.add(child);
+    }
+
+    @Override
+    public String getIconName() {
+        return iconName;
+    }
+
+    @Override
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
     }
 
     @Override

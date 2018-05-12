@@ -29,18 +29,26 @@
     <string name="undo">ОТМЕНИТЬ</string>
 
     <!--TabItem для категорий-->
-    <string name="all">ВСЕ</string>
-    <string name="income">ДОХОД</string>
-    <string name="outcome">РАСХОД</string>
+    <string name="tab_all">ВСЕ</string>
+    <string name="tab_income">ДОХОД</string>
+    <string name="tab_outcome">РАСХОД</string>
 
     <string name="name">Название</string>
 
     <string name="enter_value">Введите значение</string>
     <string name="type">Тип</string>
 
+    <string name="income">Доход</string>
+    <string name="outcome">Расход</string>
+    <string name="transfer">Перевод</string>
+    <string name="convert">Обмен</string>
+
     <string name="editing">Редактирование</string>
     <string name="adding">Добавление</string>
 
     <string name="icon">Иконка</string>
+    <string name="select_icon">Выберите иконку</string>
+
+    <string name="title_activity_select_icon">SelectIconActivity</string>
 
 </resources>

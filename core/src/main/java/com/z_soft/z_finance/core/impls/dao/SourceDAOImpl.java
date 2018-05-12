@@ -34,6 +34,7 @@ public class SourceDAOImpl implements SourceDAO {
                 source.setId(rs.getLong("id"));
                 source.setName(rs.getString("name"));
                 source.setParentId(rs.getLong("parent_id"));
+                source.setIconName(rs.getString("icon_name"));
                 source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
                 sourceList.add(source);
             }
@@ -62,6 +63,7 @@ public class SourceDAOImpl implements SourceDAO {
                     source.setId(rs.getLong("id"));
                     source.setName(rs.getString("name"));
                     source.setParentId(rs.getLong("parent_id"));
+                    source.setIconName(rs.getString("icon_name"));
                     source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
                 }
 
@@ -79,10 +81,11 @@ public class SourceDAOImpl implements SourceDAO {
     @Override
     public boolean update(Source source) {
         // для упрощения - у хранилища даем изменить только название, изменять parent_id нельзя (для этого можно удалить и заново создать)
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + SOURCE_TABLE + " set name=? where id=?")) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + SOURCE_TABLE + " set name=?, icon_name=? where id=?")) {
 
             stmt.setString(1, source.getName());// у созданного элемента - разрешаем менять только название
-            stmt.setLong(2, source.getId());
+            stmt.setString(2, source.getIconName());
+            stmt.setLong(3, source.getId());
 
             // не даем обновлять operationType - тип устанавливается только один раз при создании корневеого элемента
 
@@ -116,7 +119,7 @@ public class SourceDAOImpl implements SourceDAO {
     // добавляет объект в БД и присваивает ему сгенерированный id
     public boolean add(Source source) {
 
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + SOURCE_TABLE + "(name, parent_id, operation_type_id) values(?,?,?)");
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + SOURCE_TABLE + "(name, parent_id, operation_type_id, icon_name) values(?,?,?,?)");
              Statement stmtId = SQLiteConnection.getConnection().createStatement()
         ) {
 
@@ -129,6 +132,7 @@ public class SourceDAOImpl implements SourceDAO {
             }
 
             stmt.setLong(3, source.getOperationType().getId());
+            stmt.setString(4, source.getIconName());
 
             if (stmt.executeUpdate() == 1) {// если объект добавился нормально
 
@@ -167,6 +171,7 @@ public class SourceDAOImpl implements SourceDAO {
                     source.setId(rs.getLong("id"));
                     source.setName(rs.getString("name"));
                     source.setParentId(rs.getLong("parent_id"));
+                    source.setIconName(rs.getString("icon_name"));
                     source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
                     sourceList.add(source);
                 }
