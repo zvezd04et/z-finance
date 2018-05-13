@@ -8,6 +8,6 @@
     android:layout_height="match_parent"
     app:layoutManager="android.support.v7.widget.GridLayoutManager"
     tools:context=".fragments.IconListFragment"
-    tools:listitem="@layout/icon_node"
+    tools:listitem="@layout/icon_item"
 
     />

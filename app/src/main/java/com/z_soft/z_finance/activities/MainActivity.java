@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_source_list);
         initToolbar();
 
         //initFloatingButton();
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initToolbar() {
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.tlb_tree_list_actions);
         setSupportActionBar(toolbar);
 
         toolbarTitle = findViewById(R.id.toolbar_title);

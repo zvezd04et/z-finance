@@ -48,7 +48,7 @@ public class SelectIconActivity<T extends TreeNode> extends AbstractAnimationAct
 
 
     private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.tlb_tree_list_actions);
         setSupportActionBar(toolbar);
 
         imgClose = findViewById(R.id.img_close_select_icon);

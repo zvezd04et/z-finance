@@ -5,4 +5,17 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorGray">#d1d5d8</color>
     <color name="colorText">#eaf0f4</color>
+    <color name="colorSwipeBackground">#B5C6CD</color>
+    <color name="colorRed">#EC644B</color>
+    <color name="colorYellow">#FF9900</color>
+    <color name="colorOrange">#FDCA2E</color>
+    <color name="colorGreen">#6ACB9A</color>
+    <color name="colorBlue">#6BCDFD</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorLightGray">#ececec</color>
+    <color name="colorDarkGreen">#5CBDAA</color>
+    <color name="toolbarColor">#3F51B5</color>
+    <color name="tabTextColor">#f4cbd9</color>
+    <color name="colorSubtitle">#D86375</color>
+    <color name="colorBackground">#F4F1E0</color>
 </resources>

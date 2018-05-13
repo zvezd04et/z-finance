@@ -2,15 +2,10 @@ package com.z_soft.z_finance.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -23,7 +18,6 @@ import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.objects.LocalizedOperationType;
 import com.z_soft.z_finance.core.enums.OperationType;
 import com.z_soft.z_finance.core.interfaces.Source;
-import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.utils.IconUtils;
 
 import java.util.ArrayList;
@@ -58,11 +52,11 @@ public class EditSourceActivity<T extends Source> extends AbstractAnimationActiv
         setContentView(R.layout.activity_edit_source);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_edit_source);
-        etName = (EditText) findViewById(R.id.et_source_name);
+        etName = (EditText) findViewById(R.id.et_node_name);
         tvNodeName = (TextView) findViewById(R.id.tv_node_name);
         imgSave = (ImageView) findViewById(R.id.img_node_save);
         imgClose = (ImageView) findViewById(R.id.img_node_close);
-        imgSourceIcon = (ImageView) findViewById(R.id.img_source_icon);
+        imgSourceIcon = (ImageView) findViewById(R.id.img_node_icon);
         spSourceType = (Spinner) findViewById(R.id.sp_source_type);
 
 

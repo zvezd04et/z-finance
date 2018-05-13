@@ -76,7 +76,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         recyclerView = (RecyclerView) parent; // нужен для установки анимации
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.spr_node, parent, false);
+                .inflate(R.layout.node_item, parent, false);
 
 
         createAnimations();
@@ -244,9 +244,9 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
             super(view);
             //mView = view;
             tvSprName = view.findViewById(R.id.tv_node_name);
-            layoutMain = (LinearLayout) view.findViewById(R.id.spr_main_layout);
+            layoutMain = (LinearLayout) view.findViewById(R.id.node_main_layout);
             tvChildCount = view.findViewById(R.id.tv_node_child_count);
-            btnPopup = view.findViewById(R.id.spr_popup_button);
+            btnPopup = view.findViewById(R.id.img_node_popup);
             imgNodeIcon = view.findViewById(R.id.img_node_icon);
         }
 

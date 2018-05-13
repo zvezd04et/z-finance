@@ -14,51 +14,11 @@
             android:id="@+id/toolbar_edit_source"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            android:background="@color/toolbarColor"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            >
 
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/img_node_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/ripple_oval_gray"
-                    android:padding="10dp"
-
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:src="@drawable/ic_close"
-                    android:tint="@color/colorGray" />
-
-                <TextView
-                    android:id="@+id/tv_node_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-                    android:text="@string/editing"
-                    android:textAppearance="@android:style/TextAppearance.Material.Title"
-                    />
-
-                <ImageView
-                    android:id="@+id/img_node_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/ripple_oval_gray"
-                    android:padding="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:src="@drawable/ic_done"
-                    android:tint="@color/colorGray" />
-
-            </RelativeLayout>
+            <include layout="@layout/node_edit_actions"></include>
 
 
         </android.support.v7.widget.Toolbar>
@@ -72,10 +32,10 @@
         android:paddingTop="10dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:id="@+id/relativeLayout">
+        android:id="@+id/layout_name">
 
         <TextView
-            android:id="@+id/lbl_source_name"
+            android:id="@+id/tv_node_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -85,13 +45,12 @@
 
 
 
-
         <TextView
-            android:id="@+id/tv_source_icon_label"
+            android:id="@+id/tv_node_icon_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/lbl_source_name"
-            android:layout_below="@id/lbl_source_name"
+            android:layout_alignLeft="@id/tv_node_name"
+            android:layout_below="@id/tv_node_name"
             android:text="@string/icon"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:layout_marginTop="40dp" />
@@ -103,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/tv_source_icon_label"
+            android:layout_below="@id/tv_node_icon_label"
             android:layout_marginTop="40dp"
             android:text="@string/type"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
@@ -112,7 +71,7 @@
 
 
         <EditText
-            android:id="@+id/et_source_name"
+            android:id="@+id/et_node_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -121,24 +80,24 @@
 
             android:maxEms="20"
             android:layout_alignParentRight="true"
-            android:layout_alignBaseline="@id/lbl_source_name" />
+            android:layout_alignBaseline="@id/tv_node_name" />
 
 
 
 
         <ImageView
-            android:id="@+id/img_source_icon"
+            android:id="@+id/img_node_icon"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/tv_source_icon_label" />
+            android:layout_alignBottom="@id/tv_node_icon_label" />
 
 
         <Spinner
             android:id="@+id/sp_source_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/img_source_icon"
+            android:layout_below="@id/img_node_icon"
 
 
             android:layout_alignBaseline="@id/lbl_source_type"

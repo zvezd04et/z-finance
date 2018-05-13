@@ -29,7 +29,7 @@ public class SelectIconAdapter extends RecyclerView.Adapter<SelectIconAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.icon_node, parent, false);
+                .inflate(R.layout.icon_item, parent, false);
 
         return new ViewHolder(view);
     }
