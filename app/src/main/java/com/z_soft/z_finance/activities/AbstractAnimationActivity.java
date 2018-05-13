@@ -30,7 +30,7 @@ public abstract class AbstractAnimationActivity extends AppCompatActivity {
 
         // при закрытии активити
         Slide slide2 = new Slide(Gravity.TOP);
-        slide2.setDuration(500);
+        slide2.setDuration(300);
         getWindow().setExitTransition(slide2);
 
 

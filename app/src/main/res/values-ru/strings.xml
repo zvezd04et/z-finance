@@ -18,8 +18,8 @@
     <string name="help">Справка</string>
 
     <!--popup меню для справочников-->
-    <string name="add_sub">+ Подкатегория</string>
-    <string name="edit">+ Изменить</string>
+    <string name="add_sub">Подкатегория</string>
+    <string name="edit">Изменить</string>
     <string name="delete">Удалить</string>
 
     <string name="confirm">Подтверждение</string>
