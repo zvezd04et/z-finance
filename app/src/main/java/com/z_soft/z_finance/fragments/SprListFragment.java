@@ -12,9 +12,12 @@ import android.view.ViewGroup;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.z_soft.z_finance.R;
-import com.z_soft.z_finance.adapters.TreeNodeAdapter;
+import com.z_soft.z_finance.adapters.SourceNodeAdapter;
 import com.z_soft.z_finance.core.database.Initializer;
+import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
+import com.z_soft.z_finance.listeners.TreeNodeActionListener;
+import com.z_soft.z_finance.utils.AppContext;
 
 import java.util.List;
 
@@ -31,8 +34,9 @@ public class SprListFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener tapListener;
-    private TreeNodeAdapter treeNodeAdapter;
+    //private OnListFragmentInteractionListener tapListener;
+    private TreeNodeActionListener<Source> tapListener;
+    private SourceNodeAdapter sourceNodeAdapter;
     private List<? extends TreeNode> listNodes;
 
     /**
@@ -81,27 +85,29 @@ public class SprListFragment extends Fragment {
                     .marginResId(R.dimen.divider_left_margin, R.dimen.divider_right_margin)
                     .build());
 
-            recyclerView.setAdapter(treeNodeAdapter);
+            recyclerView.setAdapter(sourceNodeAdapter);
         }
         return view;
     }
 
 //    public void updateData(List<? extends TreeNode> list){
-//        treeNodeAdapter.updateData(list);
+//        sourceNodeAdapter.updateData(list);
 //    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            tapListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof TreeNodeActionListener) {
+            tapListener = (TreeNodeActionListener<Source>) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
 
         listNodes = Initializer.getSourceManager().getAll();
-        treeNodeAdapter = new TreeNodeAdapter(listNodes, tapListener, context);
+        sourceNodeAdapter = new SourceNodeAdapter(AppContext.SELECT_MODE);
+        //sourceNodeAdapter = new SourceNodeAdapter(listNodes);
+        sourceNodeAdapter.setListener(tapListener);
     }
 
     @Override

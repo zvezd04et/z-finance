@@ -5,14 +5,20 @@ import com.z_soft.z_finance.core.interfaces.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractTreeNode implements TreeNode {
+public abstract class AbstractTreeNode<T extends TreeNode> implements TreeNode<T> {
 
-    private long id;
-    private List<TreeNode> childs = new ArrayList<>();
-    private TreeNode parent;
+    private long id = -1;// начальное значение id для нового создаваемого объекта, нужно чтобы можно было откатывать изменение в коллекции
+    private List<T> childs = new ArrayList<>();
+    private T parent;
     private String name;
     private long parentId;
     private String iconName;
+
+
+    // для подсчета количества ссылок на этот node
+    // нужно для того, чтобы не давать удалять справочные записи, на которые есть ссылки внутри операций
+    private int refCount;
+
 
     public AbstractTreeNode() {
     }
@@ -21,7 +27,7 @@ public class AbstractTreeNode implements TreeNode {
         this.name = name;
     }
 
-    public AbstractTreeNode(List<TreeNode> childs) {
+    public AbstractTreeNode(List<T> childs) {
         this.childs = childs;
     }
 
@@ -30,7 +36,7 @@ public class AbstractTreeNode implements TreeNode {
         this.id = id;
     }
 
-    public AbstractTreeNode(long id, List<TreeNode> childs, TreeNode parent, String name) {
+    public AbstractTreeNode(long id, List<T> childs, T parent, String name) {
         this.id = id;
         this.childs = childs;
         this.parent = parent;
@@ -38,9 +44,18 @@ public class AbstractTreeNode implements TreeNode {
     }
 
     @Override
-    public void add(TreeNode child) {
+    public void add(T child) {
         child.setParent(this);
         childs.add(child);
+    }
+
+
+    public int getRefCount() {
+        return refCount;
+    }
+
+    public void setRefCount(int refCount) {
+        this.refCount = refCount;
     }
 
     @Override
@@ -54,25 +69,24 @@ public class AbstractTreeNode implements TreeNode {
     }
 
     @Override
-    public void setParent(TreeNode parent) {
+    public void setParent(T parent) {
         this.parent = parent;
     }
 
     @Override
-    public TreeNode getParent() {
+    public T getParent() {
         return parent;
     }
 
     @Override
-    public void remove(TreeNode child) {
+    public void remove(T child) {
         childs.remove(child);
     }
 
     @Override
-    public List<TreeNode> getChilds() {
+    public List<T> getChilds() {
         return childs;
     }
-
 
     @Override
     public long getId() {
@@ -85,9 +99,9 @@ public class AbstractTreeNode implements TreeNode {
     }
 
     @Override
-    public TreeNode getChild(long id) {
+    public T getChild(long id) {
 
-        for (TreeNode child: childs) {
+        for (T child: childs) {
             if (child.getId() == id){
                 return child;
             }
@@ -96,14 +110,15 @@ public class AbstractTreeNode implements TreeNode {
         return null;
     }
 
+
     @Override
     public boolean hasChilds(){
-        return !childs.isEmpty();// если есть дочерние элементы - вернуть true
+        return childs!=null && !childs.isEmpty();// если есть дочерние элементы - вернуть true
     }
 
     @Override
     public boolean hasParent() {
-        return parent != null;// если есть родитель - вернет true
+        return parent!=null;// если есть родитель - вернет true
     }
 
     @Override
@@ -136,7 +151,6 @@ public class AbstractTreeNode implements TreeNode {
         this.name = name;
     }
 
-    @Override
     public long getParentId() {
         return parentId;
     }
@@ -144,5 +158,4 @@ public class AbstractTreeNode implements TreeNode {
     public void setParentId(long parentId) {
         this.parentId = parentId;
     }
-
 }

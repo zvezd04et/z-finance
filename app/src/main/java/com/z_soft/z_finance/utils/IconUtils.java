@@ -45,5 +45,9 @@ public class IconUtils {
 
     }
 
+    public static Drawable getIcon(String iconName){
+        return iconsMap.get(iconName);
+    }
+
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SourceManager implements SourceDAO {
+public class SourceManager extends CommonManager<Source> implements SourceDAO {
 
     private ValueTree<Source> treeUtils = new ValueTree<>();// построитель дерева
 

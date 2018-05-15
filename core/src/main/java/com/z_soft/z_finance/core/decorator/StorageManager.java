@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StorageManager implements StorageDAO {
+public class StorageManager extends CommonManager<Storage> implements StorageDAO {
 
     private ValueTree<Storage> treeUtils = new ValueTree<>();// построитель дерева
 

@@ -35,8 +35,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="left"
-                android:tint="@color/colorText"
                 android:src="@drawable/ic_arrow_back"
+                android:tint="@color/colorText"
 
                 android:visibility="invisible" />
 

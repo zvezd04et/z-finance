@@ -19,13 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.z_soft.z_finance.R;
-import com.z_soft.z_finance.adapters.TreeNodeAdapter;
+import com.z_soft.z_finance.adapters.SourceNodeAdapter;
 import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.enums.OperationType;
 import com.z_soft.z_finance.core.impls.DefaultSource;
 import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.fragments.SprListFragment;
+import com.z_soft.z_finance.listeners.TreeNodeActionListener;
 
 import java.util.List;
 
@@ -35,19 +36,19 @@ import static com.z_soft.z_finance.activities.EditSourceActivity.REQUEST_NODE_ED
 import static com.z_soft.z_finance.activities.EditSourceActivity.REQUEST_NODE_ADD_CHILD;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener  {
+        implements NavigationView.OnNavigationItemSelectedListener, TreeNodeActionListener<Source> {
 
     private ImageView iconBack;
     private ImageView iconAdd;
     private Toolbar toolbar;
     private TextView toolbarTitle;
 
-    private TreeNode selectedParentNode;
+    private Source selectedParentNode;
     private OperationType defaultType;// для автоматического проставления типа при создании нового элемента
-    private TreeNodeAdapter treeNodeAdapter;
+    private SourceNodeAdapter sourceNodeAdapter;
 
     private TabLayout tabLayout;
-    private List<? extends TreeNode> currentList;// хранит корневые элементы списка
+    private List<Source> currentList;// хранит корневые элементы списка
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         initNavigationDrawer(toolbar);
 
         RecyclerView rv = findViewById(R.id.spr_list_fragment);
-        treeNodeAdapter = (TreeNodeAdapter)rv.getAdapter();
+        sourceNodeAdapter = (SourceNodeAdapter)rv.getAdapter();
 
         initTabs();
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                         break;
                 }
 
-                treeNodeAdapter.updateData(currentList, treeNodeAdapter.animatorParents);
+                sourceNodeAdapter.refreshList(currentList, sourceNodeAdapter.animatorParents);
 
             }
 
@@ -126,14 +127,15 @@ public class MainActivity extends AppCompatActivity
                 if (selectedParentNode.getParent()==null){// показать корневые элементы
 
 
-                    treeNodeAdapter.updateData(currentList, treeNodeAdapter.animatorParents);
+                    sourceNodeAdapter.refreshList(currentList, sourceNodeAdapter.animatorParents);
                     toolbarTitle.setText(R.string.sources);
                     iconBack.setVisibility(View.INVISIBLE);
                     selectedParentNode = null;
 
                 }else{// показать родительские элементы
-                    treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds(), treeNodeAdapter.animatorParents);//
-                    selectedParentNode = selectedParentNode.getParent();
+                    sourceNodeAdapter.refreshList(selectedParentNode.getParent().getChilds(), sourceNodeAdapter.animatorParents);//
+                    selectedParentNode = (Source) selectedParentNode.getParent();
+                    iconBack.setVisibility(View.VISIBLE);
                     toolbarTitle.setText(selectedParentNode.getName());
                 }
 
@@ -201,14 +203,14 @@ public class MainActivity extends AppCompatActivity
 
         if (selectedParentNode.getParent() == null) {// показать корневые элементы
 
-            treeNodeAdapter.updateData(currentList, treeNodeAdapter.animatorParents);
+            sourceNodeAdapter.refreshList(currentList, sourceNodeAdapter.animatorParents);
             toolbarTitle.setText(R.string.sources);
             iconBack.setVisibility(View.INVISIBLE);
             selectedParentNode = null;
 
         } else {// показать родительские элементы
-            treeNodeAdapter.updateData(selectedParentNode.getParent().getChilds(), treeNodeAdapter.animatorParents);//
-            selectedParentNode = selectedParentNode.getParent();
+            sourceNodeAdapter.refreshList(selectedParentNode.getParent().getChilds(), sourceNodeAdapter.animatorParents);//
+            selectedParentNode = (Source) selectedParentNode.getParent();
             toolbarTitle.setText(selectedParentNode.getName());
         }
 
@@ -263,7 +265,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClickNode(TreeNode selectedParentNode) {// при каждом нажатии на элемент списка - срабатывает этот слушатель событий - записывает выбранный node
+    public void onSelectNode(Source selectedParentNode) {// при каждом нажатии на элемент списка - срабатывает этот слушатель событий - записывает выбранный node
 
         if (selectedParentNode.hasChilds()) {
             this.selectedParentNode = selectedParentNode;// в selectedParentNode хранится ссылка на выбранную родительскую категорию
@@ -273,40 +275,47 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPopupShow(TreeNode selectedParentNode) {
+    public void onPopup(Source selectedParentNode) {
         this.selectedParentNode = selectedParentNode;
+
     }
 
+    @Override
+    public void onClick(Source node) {
+
+
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        TreeNode node = null;
+        Source node = null;
 
         if (resultCode == RESULT_OK) {
 
             switch (requestCode) {
                 case REQUEST_NODE_EDIT:
-                    treeNodeAdapter.updateNode((TreeNode) data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
+                    sourceNodeAdapter.updateNode((Source) data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
                     break;
 
                 case REQUEST_NODE_ADD:
-                    node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
+                    node = (Source) data.getSerializableExtra(NODE_OBJECT);
 
                     if (selectedParentNode != null) {// если создаем дочерний элемент, а не корневой
                         node.setParent(selectedParentNode);// setParent нужно выполнять, когда объект уже вернулся из активити
                     }
 
-                    treeNodeAdapter.insertRootNode(node);// отправляем на добавление новый объект
+                    sourceNodeAdapter.addNode(node);// отправляем на добавление новый объект
                     break;
 
                 case REQUEST_NODE_ADD_CHILD:
 
-                    node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
+                    node = (Source) data.getSerializableExtra(NODE_OBJECT);
                     node.setParent(selectedParentNode);
 
-                    treeNodeAdapter.insertChildNode(node);// отправляем на добавление новый объект
+                    sourceNodeAdapter.insertChildNode(node);// отправляем на добавление новый объект
                     break;
 
 

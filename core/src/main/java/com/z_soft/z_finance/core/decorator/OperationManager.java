@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OperationManager implements OperationDAO {
+public class OperationManager extends CommonManager<Operation> implements OperationDAO {
 
     private OperationDAO operationDAO;
 

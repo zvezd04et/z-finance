@@ -29,11 +29,11 @@ public class ValueTree<T extends TreeNode> {
 
 
     // рекурсивно проходит по всем дочерним элементам
-    private TreeNode recursiveSearch(long parentId, TreeNode child){
-        for (TreeNode node: child.getChilds()) {
-            if (node.getId() == parentId){
+    private T recursiveSearch(long parentId, T child) {
+        for (T node : (List<T>)child.getChilds()) {
+            if (node.getId() == parentId) {
                 return node;
-            }else if (node.hasChilds()){// если у текущего узло есть свои дочерние элемента - проходим и по ним
+            } else if (node.hasChilds()) {// если у текущего узло есть свои дочерние элемента - проходим и по ним
                 recursiveSearch(parentId, node);
             }
         }
