@@ -10,7 +10,7 @@ public class AppContext extends Application{
     private static String dbFolder;
     private static String dbPath;
 
-    public final static String NODE_OBJECT = "com.z_soft.z_finance.activities.EditSourceActivity.NodeObject";
+    public final static String NODE_OBJECT = "com.z_soft.z_finance.activities.edit.EditSourceActivity.NodeObject";
 
     public final static int REQUEST_NODE_EDIT = 101;
     public final static int REQUEST_NODE_ADD = 102;
@@ -21,10 +21,15 @@ public class AppContext extends Application{
     // в этом режиме при выборе значения, у которого нет дочерних элементов, будет выполнять редактирование
     public static final int EDIT_MODE = 101;
 
+
+    public static final String LIST_VIEW_MODE = "TreeNodeListAdapter.ViewMode";
+    public static final String LIST_TYPE = "TreeNodeListAdapter.Type";
+
     @Override
     public void onCreate() {
         super.onCreate();
         IconUtils.fillIcons(this); // один раз при загрузке приложения загружаем иконки
+        OperationTypeUtils.init(this); // локализованные обертки для типов операций
     }
 
 }

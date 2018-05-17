@@ -1,4 +1,4 @@
-package com.z_soft.z_finance.activities.objects;
+package com.z_soft.z_finance.utils;
 
 import android.content.Context;
 

@@ -14,16 +14,14 @@ import com.z_soft.z_finance.adapters.SelectIconAdapter;
 import com.z_soft.z_finance.core.interfaces.TreeNode;
 import com.z_soft.z_finance.fragments.IconListFragment;
 
-public class SelectIconActivity<T extends TreeNode> extends AbstractAnimationActivity implements IconListFragment.SelectIconListener {// AbstractAnimationActivity устанавливает анимацию при открытии или закрытии {
+public class SelectIconActivityBase<T extends TreeNode> extends AbstractAnimationActivity implements IconListFragment.SelectIconListener {// AbstractAnimationActivity устанавливает анимацию при открытии или закрытии {
 
     public final static int REQUEST_SELECT_ICON = 201;
-    public static final String ICON_NAME = "SelectIconActivity.IconName";
+    public static final String ICON_NAME = "SelectIconActivityBase.IconName";
 
     private ImageView imgClose;
 
     private IconListFragment iconListFragment;
-    private SelectIconAdapter iconAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +30,6 @@ public class SelectIconActivity<T extends TreeNode> extends AbstractAnimationAct
 
         initToolbar();
 
-//        RecyclerView rv = findViewById(R.id.icon_list_fragment);
-//        iconAdapter = (SelectIconAdapter)rv.getAdapter();
-        //initFragment();
-
-    }
-
-    private void initFragment() {
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        iconListFragment = new IconListFragment();
-        fragmentTransaction.replace(R.id.icon_list_fragment, iconListFragment);
-        fragmentTransaction.commit();
     }
 
 

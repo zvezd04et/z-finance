@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.z_soft.z_finance.R;
+import com.z_soft.z_finance.activities.list.SourceListActivity;
 import com.z_soft.z_finance.utils.DbConnection;
 
 public class SplashActivity extends AppCompatActivity {
@@ -25,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
                 imitateLoading();
 
                 // после загрузки переходим на главное окно
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, SourceListActivity.class);
                 startActivity(intent);
             }
         }.start();

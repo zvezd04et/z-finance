@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.ViewGroup;
 
-import com.z_soft.z_finance.activities.EditSourceActivity;
+import com.z_soft.z_finance.activities.edit.EditSourceActivity;
 import com.z_soft.z_finance.adapters.abstracts.TreeNodeListAdapter;
 import com.z_soft.z_finance.adapters.holders.SourceViewHolder;
 import com.z_soft.z_finance.core.database.Initializer;

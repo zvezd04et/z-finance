@@ -9,5 +9,5 @@
     android:layout_marginLeft="@dimen/divider_right_margin"
     android:layout_marginRight="@dimen/divider_right_margin"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-    tools:context=".fragments.SprListFragment"
+    tools:context=".fragments.TreeNodeListFragment"
     tools:listitem="@layout/node_item" />

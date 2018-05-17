@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.list.SourceListActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
@@ -24,11 +24,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.EditSourceActivity"
+            android:name=".activities.edit.EditSourceActivity"
             android:label="@string/title_activity_edit_source"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
-            android:name=".activities.SelectIconActivity"
+            android:name=".activities.SelectIconActivityBase"
             android:label="@string/title_activity_select_icon"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
