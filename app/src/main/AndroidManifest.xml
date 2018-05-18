@@ -31,6 +31,14 @@
             android:name=".activities.SelectIconActivityBase"
             android:label="@string/title_activity_select_icon"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.list.StorageListActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.edit.EditStorageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
     </application>
 
 </manifest>

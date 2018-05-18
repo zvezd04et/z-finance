@@ -40,7 +40,9 @@ public class StorageDAOImpl implements StorageDAO {
                     DefaultStorage storage = new DefaultStorage();
                     storage.setId(rs.getLong("id"));
                     storage.setName(rs.getString("name"));
+                    storage.setIconName(rs.getString("icon_name"));
                     storage.setParentId(rs.getLong("parent_id"));
+                    storage.setRefCount(rs.getInt("ref_count"));
 
                     storageList.add(storage);
                 }
@@ -156,7 +158,9 @@ public class StorageDAOImpl implements StorageDAO {
                     storage = new DefaultStorage();
                     storage.setId(rs.getLong("id"));
                     storage.setName(rs.getString("name"));
+                    storage.setIconName(rs.getString("icon_name"));
                     storage.setParentId(rs.getLong("parent_id"));
+                    storage.setRefCount(rs.getInt("ref_count"));
                 }
 
                 return storage;
@@ -173,10 +177,11 @@ public class StorageDAOImpl implements StorageDAO {
     @Override
     public boolean update(Storage storage) {
         // для упрощения - у хранилища даем изменить только название, изменять parent_id нельзя (для этого можно удалить и заново создать)
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + STORAGE_TABLE + " set name=? where id=?")) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + STORAGE_TABLE + " set name=?, icon_name=? where id=?")) {
 
             stmt.setString(1, storage.getName());
-            stmt.setLong(2, storage.getId());
+            stmt.setString(2, storage.getIconName());
+            stmt.setLong(3, storage.getId());
 
             if (stmt.executeUpdate() == 1) {
                 return true;
@@ -218,7 +223,8 @@ public class StorageDAOImpl implements StorageDAO {
 
 
             // само добавляем само хранилище, т.к. в таблице валют работает foreign key
-            try (PreparedStatement stmt = con.prepareStatement("insert into " + STORAGE_TABLE + "(name, parent_id) values(?,?)", Statement.RETURN_GENERATED_KEYS)) {// возвращать id вставленной записи
+            try (PreparedStatement stmt = con.prepareStatement("insert into " + STORAGE_TABLE + "(name, parent_id, icon_name) values(?,?,?)");
+                 Statement stmtId = SQLiteConnection.getConnection().createStatement() ) {// возвращать id вставленной записи
 
                 stmt.setString(1, storage.getName());
 
@@ -229,8 +235,11 @@ public class StorageDAOImpl implements StorageDAO {
                 }
 
 
-                if (stmt.executeUpdate() == 1) {// если хранилище добавилось нормально
-                    try (ResultSet rs = stmt.getGeneratedKeys()) {// получаем id вставленной записи
+                stmt.setString(3, storage.getIconName());
+
+                if (stmt.executeUpdate() == 1) {// если объект добавился нормально
+                    try (ResultSet rs = stmtId.executeQuery("SELECT last_insert_rowid()")) {// получаем id вставленной записи
+
 
                         if (rs.next()) {
                             storage.setId(rs.getLong(1));// не забываем просвоить новый id в объект, иначе дальше не добавятся валюты из-за foreign key
@@ -247,11 +256,13 @@ public class StorageDAOImpl implements StorageDAO {
 
                         con.commit();// если все выполнилось без ошибок - подтверждаем транзакцию
                         return true;
+
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        con.rollback();// если код дошел до этого места - значит что-то пошлое не так, поэтому откатываем транзакцию
                     }
-
                 }
-
-                con.rollback();// если код дошел до этого места - значит что-то пошлое не так, поэтому откатываем транзакцию
 
             }
 

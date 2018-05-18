@@ -13,12 +13,14 @@ import android.view.MenuItem;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.list.SourceListActivity;
+import com.z_soft.z_finance.activities.list.StorageListActivity;
 
 // базовый класс для любого активити, который должен иметь drawer
 // нужно унаследоваться от этого класса и вызвать метод  createDrawer после создания toolbar
 public abstract class BaseDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private Intent sourceListIntent;
+    private Intent storageListIntent;
 
 
 
@@ -32,6 +34,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Na
         super.onCreate(savedInstanceState);
 
         sourceListIntent = new Intent(this, SourceListActivity.class);
+        storageListIntent = new Intent(this, StorageListActivity.class);
 
         bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(BaseDrawerActivity.this).toBundle();
 
@@ -64,7 +67,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Na
         } else if (id == R.id.nav_sources) {
             startActivity(sourceListIntent, bundle);
         } else if (id == R.id.nav_storages) {
-
+            startActivity(storageListIntent, bundle);
         } else if (id == R.id.nav_reports) {
 
         } else if (id == R.id.nav_settings) {

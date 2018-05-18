@@ -36,6 +36,7 @@ public class SourceDAOImpl implements SourceDAO {
                 source.setParentId(rs.getLong("parent_id"));
                 source.setIconName(rs.getString("icon_name"));
                 source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
+                source.setRefCount(rs.getInt("ref_count"));
                 sourceList.add(source);
             }
 
@@ -65,6 +66,7 @@ public class SourceDAOImpl implements SourceDAO {
                     source.setParentId(rs.getLong("parent_id"));
                     source.setIconName(rs.getString("icon_name"));
                     source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
+                    source.setRefCount(rs.getInt("ref_count"));
                 }
 
                 return source;
@@ -136,7 +138,7 @@ public class SourceDAOImpl implements SourceDAO {
 
             if (stmt.executeUpdate() == 1) {// если объект добавился нормально
 
-                try (ResultSet rs = stmtId.executeQuery("SELECT last_insert_rowid()");) {// получаем id вставленной записи
+                try (ResultSet rs = stmtId.executeQuery("SELECT last_insert_rowid()")) {// получаем id вставленной записи
 
                     if (rs.next()) {
                         source.setId(rs.getLong(1));// не забываем просвоить новый id в объект
@@ -173,6 +175,7 @@ public class SourceDAOImpl implements SourceDAO {
                     source.setParentId(rs.getLong("parent_id"));
                     source.setIconName(rs.getString("icon_name"));
                     source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
+                    source.setRefCount(rs.getInt("ref_count"));
                     sourceList.add(source);
                 }
 

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.edit.EditStorageActivity">
+
+
+    <include layout="@layout/node_edit_actions"/>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:id="@+id/relativeLayout"
+
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+
+        >
+
+        <TextView
+            android:id="@+id/tv_node_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/name"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_node_icon_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_node_name"
+            android:layout_below="@id/tv_node_name"
+            android:text="@string/icon"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:layout_marginTop="40dp" />
+
+
+
+
+
+        <EditText
+            android:id="@+id/et_node_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+
+            android:text="value"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+
+            android:maxEms="20"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/tv_node_name"
+
+
+            />
+
+
+
+
+        <ImageView
+            android:id="@+id/img_node_icon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/tv_node_icon_label" />
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

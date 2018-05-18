@@ -54,8 +54,19 @@ public class StorageManager extends CommonManager<Storage> implements StorageDAO
     @Override
     // TODO подумать как сделать - сначала обновлять в базе, а потом уже в коллекции (либо - если в базе не обновилось - откатить изменения в объекте коллекции)
     public boolean update(Storage storage) throws SQLException{
+        if (storageDAO.update(storage)) {
 
-        return storageDAO.update(storage);
+            Storage s = identityMap.get(storage.getId());
+
+            // данные обновлятся сразу во всех коллекциях, т.к. они ссылаются на один и тот же объект
+            // не нужно пробегать по всем коллекциям и обновлять в них
+            s.setName(storage.getName());
+            s.setIconName(storage.getIconName());
+
+            return true;
+        }
+
+        return false;
 
     }
 
