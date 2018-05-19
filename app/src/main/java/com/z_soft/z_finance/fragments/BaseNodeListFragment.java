@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.adapters.abstracts.BaseNodeListAdapter;
 import com.z_soft.z_finance.core.interfaces.IconNode;
@@ -45,6 +46,11 @@ public class BaseNodeListFragment<T extends IconNode, A extends BaseNodeListAdap
             recyclerView.setLayoutManager(new LinearLayoutManager(context));// выбираем стандартный тип показа - как список
 
             recyclerView.setAdapter(adapter);
+
+            // добавить разделитель между элементами списка
+            recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+                    .marginResId(R.dimen.divider_left_margin, R.dimen.divider_right_margin)
+                    .build());
 
         }
         return view;

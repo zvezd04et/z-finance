@@ -5,9 +5,11 @@ import com.z_soft.z_finance.core.interfaces.Operation;
 
 import java.util.Calendar;
 
-public class AbstractOperation implements Operation, Comparable<Operation> {
+public abstract class AbstractOperation implements Operation{
 
     private long id;
+    private String name;
+    private String iconName;
     private Calendar dateTime; // дата и время выполнения операции (подставлять автоматически при создании, но можно будет изменять в любое время)
     private String description; // доп. информация, которую вводит пользователь
     private OperationType operationType;// тип операции (доход, расход, перевод, конвертация)
@@ -30,17 +32,34 @@ public class AbstractOperation implements Operation, Comparable<Operation> {
 
 
     @Override
+    public String getIconName() {
+        return iconName;
+    }
+
+    @Override
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }
 
-    @Override
     public void setId(long id) {
         this.id = id;
     }
 
 
-    @Override
     public Calendar getDateTime() {
         return dateTime;
     }
@@ -50,7 +69,6 @@ public class AbstractOperation implements Operation, Comparable<Operation> {
     }
 
 
-    @Override
     public String getDescription() {
         return description;
     }
@@ -59,7 +77,6 @@ public class AbstractOperation implements Operation, Comparable<Operation> {
         this.description = description;
     }
 
-    @Override
     public OperationType getOperationType() {
         return operationType;
     }
@@ -69,7 +86,24 @@ public class AbstractOperation implements Operation, Comparable<Operation> {
     }
 
     @Override
-    public int compareTo(Operation operation) {
-        return operation.getDateTime().compareTo(dateTime);
+    public int compareTo(Operation o) {// по-умолчанию сортируе по дате
+        return o.getDateTime().compareTo(dateTime);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AbstractOperation that = (AbstractOperation) o;
+
+        return id == that.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

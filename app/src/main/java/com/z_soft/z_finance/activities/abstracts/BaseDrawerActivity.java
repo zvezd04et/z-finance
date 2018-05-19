@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.z_soft.z_finance.R;
+import com.z_soft.z_finance.activities.list.OperationListActivity;
 import com.z_soft.z_finance.activities.list.SourceListActivity;
 import com.z_soft.z_finance.activities.list.StorageListActivity;
 
@@ -21,7 +22,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Na
 
     private Intent sourceListIntent;
     private Intent storageListIntent;
-
+    private Intent operationListIntent;
 
 
     // для выполнения анимации при переходе между активити
@@ -35,6 +36,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Na
 
         sourceListIntent = new Intent(this, SourceListActivity.class);
         storageListIntent = new Intent(this, StorageListActivity.class);
+        operationListIntent = new Intent(this, OperationListActivity.class);
 
         bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(BaseDrawerActivity.this).toBundle();
 
@@ -63,7 +65,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Na
         int id = item.getItemId();
 
         if (id == R.id.nav_operations) {
-
+            startActivity(operationListIntent, bundle);
         } else if (id == R.id.nav_sources) {
             startActivity(sourceListIntent, bundle);
         } else if (id == R.id.nav_storages) {

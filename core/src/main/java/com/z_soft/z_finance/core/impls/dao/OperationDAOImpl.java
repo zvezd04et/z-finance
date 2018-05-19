@@ -12,6 +12,7 @@ import com.z_soft.z_finance.core.interfaces.Source;
 import com.z_soft.z_finance.core.interfaces.Storage;
 import com.z_soft.z_finance.core.interfaces.dao.OperationDAO;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -111,7 +112,7 @@ public class OperationDAOImpl implements OperationDAO {
 
                 operation.setFromSource(sourceIdentityMap.get(rs.getLong("from_source_id"))); // откуда поступили деньги
                 operation.setFromCurrency(Currency.getInstance(rs.getString("from_currency_code"))); // в какой валюте поступили
-                operation.setFromAmount(rs.getBigDecimal("from_amount")); // сумма поступления
+                operation.setFromAmount(new BigDecimal(rs.getDouble("from_amount"))); // сумма поступления
                 operation.setToStorage(storageIdentityMap.get(rs.getLong("to_storage_id")));// куда положим эти деньги
 
 
@@ -122,7 +123,7 @@ public class OperationDAOImpl implements OperationDAO {
 
                 operation.setFromStorage(storageIdentityMap.get(rs.getLong("from_storage_id"))); // откуда взяли деньги
                 operation.setFromCurrency(Currency.getInstance(rs.getString("from_currency_code")));// в какой валюте расход
-                operation.setFromAmount(rs.getBigDecimal("from_amount")); // сумма расхода
+                operation.setFromAmount(new BigDecimal(rs.getDouble("from_amount"))); // сумма расхода
                 operation.setToSource(sourceIdentityMap.get(rs.getLong("to_source_id")));// на что потратили
 
 
@@ -134,7 +135,7 @@ public class OperationDAOImpl implements OperationDAO {
 
                 operation.setFromStorage(storageIdentityMap.get(rs.getLong("from_storage_id")));// откуда переводим
                 operation.setFromCurrency(Currency.getInstance(rs.getString("from_currency_code"))); // в какой валюте переводим
-                operation.setFromAmount(rs.getBigDecimal("from_amount")); // какую сумму переводим
+                operation.setFromAmount(new BigDecimal(rs.getDouble("from_amount"))); // какую сумму переводим
                 operation.setToStorage(storageIdentityMap.get(rs.getLong("to_storage_id"))); // не создаем новый объект, используем ранее созданный объект источника
 
                 return operation;
@@ -145,12 +146,12 @@ public class OperationDAOImpl implements OperationDAO {
 
                 operation.setFromStorage(storageIdentityMap.get(rs.getLong("from_storage_id"))); // откуда конвертируем
                 operation.setFromCurrency(Currency.getInstance(rs.getString("from_currency_code"))); // в каой валюте
-                operation.setFromAmount(rs.getBigDecimal("from_amount")); // какая сумма в исходной валюте
+                operation.setFromAmount(new BigDecimal(rs.getDouble("from_amount"))); // какая сумма в исходной валюте
 
 
                 operation.setToStorage(storageIdentityMap.get(rs.getLong("to_storage_id"))); // куда конвертируем
                 operation.setToCurrency((Currency.getInstance(rs.getString("to_currency_code")))); // валюта поступления
-                operation.setToAmount(rs.getBigDecimal("to_amount")); // какая итоговая сумма поступила в этой валюте
+                operation.setToAmount(new BigDecimal(rs.getDouble("to_amount"))); // какая итоговая сумма поступила в этой валюте
 
 
                 return operation;
@@ -165,12 +166,12 @@ public class OperationDAOImpl implements OperationDAO {
 
     @Override
     // при обновлении не даем менять тип операции - только данные самой операции (дата, суммы, источники, хранилища, описание)
-    public boolean update(Operation operation) {
+    public boolean update(Operation operation) throws SQLException{
         return (delete(operation) && add(operation));// при обновлении - удаляем старую операцию, добавляем новую, т.к. могут поменяться хранилища, источники
     }
 
     @Override
-    public boolean delete(Operation operation) {
+    public boolean delete(Operation operation) throws SQLException{
         // TODO реализовать - если есть ли операции по данному хранилищу - запрещать удаление
         try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + OPERATION_TABLE + " where id=?")) {
 
@@ -179,13 +180,11 @@ public class OperationDAOImpl implements OperationDAO {
             if (stmt.executeUpdate() == 1) {
                 return true;
             }
-
-        } catch (SQLException e) {
-            Logger.getLogger(SourceDAOImpl.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return false;
     }
+
 
     @Override
     public boolean add(Operation operation) {
@@ -194,7 +193,10 @@ public class OperationDAOImpl implements OperationDAO {
         String sql = createInsertSql(operation); // подготовить sql с нужными параметрами, в зависимости от типа операции
 
 
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+             Statement stmtId = SQLiteConnection.getConnection().createStatement();
+
+        ) {
 
             // общие поля для всех типов операций
             stmt.setLong(1, operation.getDateTime().getTimeInMillis());
@@ -246,8 +248,7 @@ public class OperationDAOImpl implements OperationDAO {
 
 
             if (stmt.executeUpdate() == 1) {// если объект добавился нормально
-                try (ResultSet rs = stmt.getGeneratedKeys()) {// получаем id вставленной записи
-
+                try (ResultSet rs = stmtId.executeQuery("SELECT last_insert_rowid()")) {// получаем id вставленной записи
                     if (rs.next()) {
                         operation.setId(rs.getLong(1));// не забываем просвоить новый id в объект
                     }

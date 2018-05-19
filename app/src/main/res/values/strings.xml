@@ -52,6 +52,7 @@
 
     <string name="select_icon">Select icon</string>
 
+    <string name="title_activity_operation_list">OperationListActivity</string>
     <string name="title_activity_select_icon">SelectIconActivity</string>
 
 </resources>

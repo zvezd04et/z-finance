@@ -4,7 +4,7 @@ import com.z_soft.z_finance.core.enums.OperationType;
 
 import java.util.Calendar;
 
-public interface Operation extends Comparable<Operation> {
+public interface Operation extends IconNode, Comparable<Operation> {
 
     long getId();
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:id="@+id/node_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    android:background="@drawable/ripple_rectangle">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+
+        <!--  общее поле для любого списка записей, имеет одинаковый id во всех макетах, чтобы удобно было считывать в базовом BaseViewHolder)-->
+        <!-- специфичные поля имеют в названии слово operation -->
+        <ImageView
+            android:id="@+id/img_node_icon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+
+            />
+
+        <LinearLayout
+            android:id="@+id/operation_name_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/img_node_icon"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_node_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="value"
+                android:textSize="15sp"
+
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_operation_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/tv_node_name"
+                android:layout_below="@id/tv_node_name"
+                android:text="subtitle"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_operation_type_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:width="75dp"
+            android:background="@color/colorGray"
+            android:padding="5dp"
+            android:text="type"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="10dp"
+            android:tint="@color/colorText"
+
+            />
+
+
+        <TextView
+            android:id="@+id/tv_operation_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/tv_operation_type_tag"
+            android:text="sum"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_operation_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/tv_operation_amount"
+            android:layout_below="@id/tv_operation_amount"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="sum"
+            android:textColor="@color/colorText"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <!--<View-->
+            <!--android:id="@+id/line_separator"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_alignStart="@id/operation_name_layout"-->
+            <!--android:layout_below="@id/img_node_icon"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:background="@color/colorGray" />-->
+
+
+    </RelativeLayout>
+
+</LinearLayout>

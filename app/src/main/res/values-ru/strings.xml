@@ -50,6 +50,7 @@
     <string name="icon">Иконка</string>
     <string name="select_icon">Выберите иконку</string>
 
+    <string name="title_activity_operation_list">OperationListActivity</string>
     <string name="title_activity_select_icon">SelectIconActivity</string>
 
 </resources>

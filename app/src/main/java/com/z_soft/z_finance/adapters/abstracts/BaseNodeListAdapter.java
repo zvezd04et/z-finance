@@ -99,24 +99,8 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
     // заполнение каждой позиции из списка
     @Override
     public void onBindViewHolder(VH holder, final int position) {
-        //super.onBindViewHolder(holder, position);// обязательно нужно вызывать, чтобы проинициализировать все переменные в родительских классах
 
         final T node = adapterList.get(position);// определяем выбранный пункт
-
-//        final SwipeLayout swipeLayout = holder.swipeLayout;
-//
-//        swipeLayout.setDragEdge(SwipeLayout.DragEdge.Right);// для вызова меню - свайп справа налево
-//        swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);// эффект появления и скрытия
-
-        //closeItem(position);
-
-//        swipeLayout.addSwipeListener(new SimpleSwipeListener() {
-//            @Override
-//            public void onOpen(SwipeLayout layout) {
-//                listener.onSwipe(node);
-//            }
-//        });
-
 
         initListeners(holder, position, node);
 
@@ -141,23 +125,6 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
     }
 
     protected void initListeners(VH holder, final int position, final T node) {
-
-//        holder.imgSwipeDeleteNode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                closeItem(position);
-//                closeSnackBar();
-//                deleteWithSnackbar(node, position);
-//            }
-//        });
-
-//        holder.imgSwipeEditNode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                runEditActivity(position, node);
-//            }
-//        });
-
 
         // обработка события при нажатии на любую запись списка
         holder.layoutMain.setOnClickListener(new View.OnClickListener() {
