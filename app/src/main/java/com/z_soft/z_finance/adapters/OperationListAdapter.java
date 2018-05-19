@@ -2,6 +2,7 @@ package com.z_soft.z_finance.adapters;
 
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.view.ViewGroup;
 
@@ -108,7 +109,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
             case INCOME:
                 IncomeOperation incomeOperation = (IncomeOperation) operation;
                 amountTitle = incomeOperation.getFromAmount().toString()+" "+incomeOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(activityContext.getColor(ColorUtils.incomeColor));
+                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.incomeColor));
                 holder.tvNodeName.setText(incomeOperation.getFromSource().getName() + " -> " + incomeOperation.getToStorage().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(incomeOperation.getFromSource().getIconName())); // иконка для операции - из категории, откуда пришли деньги
 
@@ -117,7 +118,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
             case OUTCOME:
                 OutcomeOperation outcomeOperation = (OutcomeOperation) operation;
                 amountTitle = outcomeOperation.getFromAmount().toString()+" "+outcomeOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(activityContext.getColor(ColorUtils.outcomeColor));
+                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.outcomeColor));
                 holder.tvNodeName.setText(outcomeOperation.getFromStorage().getName() + " -> " + outcomeOperation.getToSource().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(outcomeOperation.getToSource().getIconName()));// иконка для операции - из категории, куда потратили деньги
 
@@ -126,7 +127,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
             case TRANSFER:
                 TransferOperation transferOperation = (TransferOperation) operation;
                 amountTitle = transferOperation.getFromAmount().toString()+" "+transferOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(activityContext.getColor(ColorUtils.transferColor));
+                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.transferColor));
                 holder.tvNodeName.setText(transferOperation.getFromStorage().getName() + " -> " + transferOperation.getToStorage().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(transferOperation.getToStorage().getIconName()));// иконка для операции - из счета, куда перевели деньги
 
@@ -135,7 +136,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
             case CONVERT:
                 ConvertOperation convertOperation = (ConvertOperation) operation;
                 amountTitle = convertOperation.getToAmount().toString()+" "+convertOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(activityContext.getColor(ColorUtils.convertColor));
+                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.convertColor));
                 holder.tvNodeName.setText(convertOperation.getFromStorage().getName() + " -> " + convertOperation.getToStorage().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(convertOperation.getToStorage().getIconName()));// иконка для операции - из счета, куда перевели деньги
 

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.z_soft.z_finance"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -20,9 +20,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     sourceSets {
         main.res.srcDirs += ['src/main/res/icons']
+    }
+    productFlavors {
     }
 }
 
