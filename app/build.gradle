@@ -45,3 +45,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(path: ':core')
 }
+
+android.applicationVariants.all { variant ->
+    variant.outputs.all {
+        outputFileName = "z-finance"
+        outputFileName += "-v" + android.defaultConfig.versionName
+        if (variant.buildType.name == "release") {
+            outputFileName += ".apk"
+        } else {
+            def formattedDate = new Date().format('yyyy-MM-dd-HHmmss')
+            outputFileName += "-" + formattedDate + ".apk"
+            //outputFileName += ".apk"
+        }
+    }
+}

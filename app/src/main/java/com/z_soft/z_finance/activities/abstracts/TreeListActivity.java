@@ -144,16 +144,13 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
     // елис нажали физическую кнопку назад на устройстве
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
         if (!drawerClosed) {// если был активен drawer - кнопка back его закроет, не нужно переходить по дереву
             if (icBack.isShown()) { // если кнопка видна - значит находимся в дочернем списке
                 icBack.callOnClick(); // симулируем кнопку "назад" - переходим на уровень выше, к родительским элементам
             }else {
-                //если кнопка не видна - закрываем приложение
-                Intent a = new Intent(Intent.ACTION_MAIN);
-                a.addCategory(Intent.CATEGORY_HOME);
-                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(a);
+                super.onBackPressed();
+
             }
         }
     }
