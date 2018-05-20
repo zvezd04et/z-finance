@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import android.view.ViewGroup;
 
 import com.z_soft.z_finance.R;
+import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
 import com.z_soft.z_finance.adapters.abstracts.BaseNodeListAdapter;
 import com.z_soft.z_finance.adapters.holders.OperationViewHolder;
 import com.z_soft.z_finance.core.database.Initializer;
@@ -49,7 +50,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
 
                 switch (node.getOperationType()){
                     case INCOME:
-                        //activityClass = EditIncomeOperationActivity.class;
+                        activityClass = EditIncomeOperationActivity.class;
                         break;
                     case OUTCOME:
                         break;
@@ -102,46 +103,51 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
         }
 
 
+        int operationColor = 0;
 
         String amountTitle = null;
         // поля для каждого типа операции отличаются
         switch (operation.getOperationType()){
             case INCOME:
+                operationColor = ContextCompat.getColor(activityContext, ColorUtils.incomeColor);
                 IncomeOperation incomeOperation = (IncomeOperation) operation;
-                amountTitle = incomeOperation.getFromAmount().toString()+" "+incomeOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.incomeColor));
+                amountTitle = "+" +  incomeOperation.getFromAmount().toString()+" "+incomeOperation.getFromCurrency().getSymbol().substring(0, 1);
+
                 holder.tvNodeName.setText(incomeOperation.getFromSource().getName() + " -> " + incomeOperation.getToStorage().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(incomeOperation.getFromSource().getIconName())); // иконка для операции - из категории, откуда пришли деньги
 
                 break;
 
             case OUTCOME:
+                operationColor = ContextCompat.getColor(activityContext, ColorUtils.outcomeColor);
                 OutcomeOperation outcomeOperation = (OutcomeOperation) operation;
-                amountTitle = outcomeOperation.getFromAmount().toString()+" "+outcomeOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.outcomeColor));
+                amountTitle = "-" + outcomeOperation.getFromAmount().toString()+" "+outcomeOperation.getFromCurrency().getSymbol().substring(0, 1);
                 holder.tvNodeName.setText(outcomeOperation.getFromStorage().getName() + " -> " + outcomeOperation.getToSource().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(outcomeOperation.getToSource().getIconName()));// иконка для операции - из категории, куда потратили деньги
 
                 break;
 
             case TRANSFER:
+                operationColor = ContextCompat.getColor(activityContext, ColorUtils.transferColor);
                 TransferOperation transferOperation = (TransferOperation) operation;
-                amountTitle = transferOperation.getFromAmount().toString()+" "+transferOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.transferColor));
                 holder.tvNodeName.setText(transferOperation.getFromStorage().getName() + " -> " + transferOperation.getToStorage().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(transferOperation.getToStorage().getIconName()));// иконка для операции - из счета, куда перевели деньги
 
                 break;
 
             case CONVERT:
+                operationColor = ContextCompat.getColor(activityContext, ColorUtils.convertColor);
                 ConvertOperation convertOperation = (ConvertOperation) operation;
                 amountTitle = convertOperation.getToAmount().toString()+" "+convertOperation.getFromCurrency().getSymbol().substring(0, 1);
-                holder.tvOperationTypeTag.setBackgroundColor(ContextCompat.getColor(activityContext, ColorUtils.convertColor));
                 holder.tvNodeName.setText(convertOperation.getFromStorage().getName() + " -> " + convertOperation.getToStorage().getName());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(convertOperation.getToStorage().getIconName()));// иконка для операции - из счета, куда перевели деньги
 
                 break;
         }
+
+        holder.tvOperationTypeTag.setBackgroundColor(operationColor);
+        holder.tvOperationAmount.setTextColor(operationColor);
+
 
         holder.tvOperationAmount.setText(amountTitle);
         holder.tvOperationSubtitle.setText(subTitle);
