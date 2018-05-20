@@ -22,28 +22,31 @@
         <activity
             android:name=".activities.list.SourceListActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.list.OperationListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_operation_list"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.edit.EditSourceActivity"
             android:label="@string/title_activity_edit_source"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.SelectIconActivityBase"
             android:label="@string/title_activity_select_icon"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".activities.list.StorageListActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.edit.EditStorageActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
+        <activity
+            android:name=".activities.edit.operation.EditIncomeOperationActivity"
+            android:label="@string/title_activity_edit_income_operation"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

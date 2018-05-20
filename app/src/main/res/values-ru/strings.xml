@@ -53,4 +53,12 @@
     <string name="title_activity_operation_list">OperationListActivity</string>
     <string name="title_activity_select_icon">SelectIconActivity</string>
 
+    <string name="source">Категория</string>
+    <string name="storage">Счет</string>
+    <string name="amount">Сумма</string>
+    <string name="currency">Валюта</string>
+    <string name="operation_type">Тип операции</string>
+
+    <string name="no_available_currency">Нет доступных валют для вабранного счета</string>
+
 </resources>

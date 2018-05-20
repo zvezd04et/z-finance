@@ -54,5 +54,15 @@
 
     <string name="title_activity_operation_list">OperationListActivity</string>
     <string name="title_activity_select_icon">SelectIconActivity</string>
+    <string name="title_activity_edit_income_operation">EditIncomeOperationActivity</string>
+
+    <string name="source">Source</string>
+    <string name="storage">Storage</string>
+    <string name="amount">Amount</string>
+    <string name="currency">Currency</string>
+    <string name="operation_type">Operation type</string>
+
+    <string name="no_available_currency">No available currency</string>
+    <string name="currency_not_exist">currency not exist for storage</string>
 
 </resources>

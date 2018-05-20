@@ -25,6 +25,8 @@ public class AppContext extends Application{
     public static final String LIST_VIEW_MODE = "TreeNodeListAdapter.ViewMode";
     public static final String LIST_TYPE = "TreeNodeListAdapter.Type";
 
+    public static final String DATE_CALENDAR = "AppContext.DATE_CALENDAR";
+
     @Override
     public void onCreate() {
         super.onCreate();

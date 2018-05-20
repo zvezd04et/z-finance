@@ -55,7 +55,7 @@ public class DefaultStorage extends AbstractTreeNode implements Storage{
 
     @Override
     public BigDecimal getAmount(Currency currency) throws CurrencyException {
-        checkCurrencyExist(currency); // в Spring через AOP легче внедрять повторяющиеся участки кода
+        //checkCurrencyExist(currency); // в Spring через AOP легче внедрять повторяющиеся участки кода
         return currencyAmounts.get(currency);
     }
 
@@ -78,9 +78,9 @@ public class DefaultStorage extends AbstractTreeNode implements Storage{
     // сумма не должна быть меньше нуля (в реальности такое невозможно, мы не можем потратить больше того, что есть)
     private void checkAmount(BigDecimal amount) throws AmountException {
 
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new AmountException("Amount can't be < 0");
-        }
+//        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+//            throw new AmountException("Amount can't be < 0");
+//        }
 
     }
 

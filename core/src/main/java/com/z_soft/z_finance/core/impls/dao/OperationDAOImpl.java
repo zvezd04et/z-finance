@@ -193,8 +193,8 @@ public class OperationDAOImpl implements OperationDAO {
         String sql = createInsertSql(operation); // подготовить sql с нужными параметрами, в зависимости от типа операции
 
 
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-             Statement stmtId = SQLiteConnection.getConnection().createStatement();
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement(sql);
+             Statement stmtId = SQLiteConnection.getConnection().createStatement()
 
         ) {
 

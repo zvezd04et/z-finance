@@ -142,10 +142,13 @@ public class OperationManager extends CommonManager<Operation> implements Operat
 
                     IncomeOperation incomeOperation = (IncomeOperation) operation;
 
-                    BigDecimal currentAmount = incomeOperation.getToStorage().getAmount(incomeOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = incomeOperation.getToStorage().getAmount(incomeOperation.getFromCurrency());
+
+                    BigDecimal currentAmount = (tmpAmount == null) ? BigDecimal.ZERO : tmpAmount; // получаем текущее значение остатка (баланса)
                     BigDecimal newAmount = currentAmount.subtract(incomeOperation.getFromAmount()); //прибавляем сумму операции
 
                     updateAmountResult = storageManager.updateAmount(incomeOperation.getToStorage(), incomeOperation.getFromCurrency(), newAmount);
+
 
                     break;// не забываем ставить break, чтобы следующие case не выполнялись
 
@@ -154,11 +157,12 @@ public class OperationManager extends CommonManager<Operation> implements Operat
 
                     OutcomeOperation outcomeOperation = (OutcomeOperation) operation;
 
-                    BigDecimal currentAmount = outcomeOperation.getFromStorage().getAmount(outcomeOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = outcomeOperation.getFromStorage().getAmount(outcomeOperation.getFromCurrency());
+
+                    BigDecimal currentAmount = (tmpAmount == null) ? BigDecimal.ZERO : tmpAmount; // получаем текущее значение остатка (баланса)
                     BigDecimal newAmount = currentAmount.add(outcomeOperation.getFromAmount()); //отнимаем сумму операции
 
                     updateAmountResult = storageManager.updateAmount(outcomeOperation.getFromStorage(), outcomeOperation.getFromCurrency(), newAmount);
-
 
                     break;
                 }
@@ -168,11 +172,14 @@ public class OperationManager extends CommonManager<Operation> implements Operat
                     TransferOperation trasnferOperation = (TransferOperation) operation;
 
                     // для хранилища, откуда перевели деньги - отнимаем сумму операции
-                    BigDecimal currentAmountFromStorage = trasnferOperation.getFromStorage().getAmount(trasnferOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = trasnferOperation.getFromStorage().getAmount(trasnferOperation.getFromCurrency());
+
+                    BigDecimal currentAmountFromStorage = (tmpAmount == null) ? BigDecimal.ZERO : tmpAmount;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountFromStorage = currentAmountFromStorage.add(trasnferOperation.getFromAmount()); //отнимаем сумму операции
 
                     // для хранилища, куда перевели деньги - прибавляем сумму операции
-                    BigDecimal currentAmountToStorage = trasnferOperation.getToStorage().getAmount(trasnferOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    tmpAmount = trasnferOperation.getToStorage().getAmount(trasnferOperation.getFromCurrency());
+                    BigDecimal currentAmountToStorage = (tmpAmount == null) ? BigDecimal.ZERO : tmpAmount;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountToStorage = currentAmountToStorage.subtract(trasnferOperation.getFromAmount()); //прибавляем сумму операции
 
 
@@ -187,11 +194,13 @@ public class OperationManager extends CommonManager<Operation> implements Operat
                     ConvertOperation convertOperation = (ConvertOperation) operation;
 
                     // для хранилища, откуда перевели деньги - отнимаем сумму операции
-                    BigDecimal currentAmountFromStorage = convertOperation.getFromStorage().getAmount(convertOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = convertOperation.getFromStorage().getAmount(convertOperation.getFromCurrency());
+                    BigDecimal currentAmountFromStorage = (tmpAmount == null) ? BigDecimal.ZERO : tmpAmount;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountFromStorage = currentAmountFromStorage.add(convertOperation.getFromAmount()); // сколько отнимаем
 
                     // для хранилища, куда перевели деньги - прибавляем сумму операции
-                    BigDecimal currentAmountToStorage = convertOperation.getToStorage().getAmount(convertOperation.getToCurrency());// получаем текущее значение остатка (баланса)
+                    tmpAmount = convertOperation.getToStorage().getAmount(convertOperation.getToCurrency());
+                    BigDecimal currentAmountToStorage = (tmpAmount == null) ? BigDecimal.ZERO : tmpAmount;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountToStorage = currentAmountToStorage.subtract(convertOperation.getToAmount()); // сколько прибавляем
 
 
@@ -219,7 +228,7 @@ public class OperationManager extends CommonManager<Operation> implements Operat
     private void removeFromCollections(Operation operation) {
         operationList.remove(operation);
         identityMap.remove(operation.getId());
-        operationDAO.getList(operation.getOperationType()).remove(operation);
+        operationMap.get(operation.getOperationType()).remove(operation);
     }
 
     @Override
@@ -245,7 +254,9 @@ public class OperationManager extends CommonManager<Operation> implements Operat
 
                     IncomeOperation incomeOperation = (IncomeOperation) operation;
 
-                    BigDecimal currentAmount = incomeOperation.getToStorage().getAmount(incomeOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = incomeOperation.getToStorage().getAmount(incomeOperation.getFromCurrency());
+
+                    BigDecimal currentAmount = tmpAmount != null ? tmpAmount : BigDecimal.ZERO;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmount = currentAmount.add(incomeOperation.getFromAmount()); //прибавляем сумму операции
 
                     // обновляем баланс
@@ -258,12 +269,14 @@ public class OperationManager extends CommonManager<Operation> implements Operat
 
                     OutcomeOperation outcomeOperation = (OutcomeOperation) operation;
 
-                    BigDecimal currentAmount = outcomeOperation.getFromStorage().getAmount(outcomeOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = outcomeOperation.getFromStorage().getAmount(outcomeOperation.getFromCurrency());
+
+                    BigDecimal currentAmount = tmpAmount != null ? tmpAmount : BigDecimal.ZERO;
+                    // получаем текущее значение остатка (баланса)
                     BigDecimal newAmount = currentAmount.subtract(outcomeOperation.getFromAmount()); //отнимаем сумму операции
 
                     // обновляем баланс
                     updateAmountResult = storageManager.updateAmount(outcomeOperation.getFromStorage(), outcomeOperation.getFromCurrency(), newAmount);
-
 
                     break;
                 }
@@ -273,11 +286,13 @@ public class OperationManager extends CommonManager<Operation> implements Operat
                     TransferOperation trasnferOperation = (TransferOperation) operation;
 
                     // для хранилища, откуда перевели деньги - отнимаем сумму операции
-                    BigDecimal currentAmountFromStorage = trasnferOperation.getFromStorage().getAmount(trasnferOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = trasnferOperation.getFromStorage().getAmount(trasnferOperation.getFromCurrency());
+                    BigDecimal currentAmountFromStorage = tmpAmount != null ? tmpAmount : BigDecimal.ZERO;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountFromStorage = currentAmountFromStorage.subtract(trasnferOperation.getFromAmount()); //отнимаем сумму операции
 
                     // для хранилища, куда перевели деньги - прибавляем сумму операции
-                    BigDecimal currentAmountToStorage = trasnferOperation.getToStorage().getAmount(trasnferOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    tmpAmount = trasnferOperation.getToStorage().getAmount(trasnferOperation.getFromCurrency());
+                    BigDecimal currentAmountToStorage = tmpAmount != null ? tmpAmount : BigDecimal.ZERO; // получаем текущее значение остатка (баланса)
                     BigDecimal newAmountToStorage = currentAmountToStorage.add(trasnferOperation.getFromAmount()); //прибавляем сумму операции
 
                     // обновляем баланс в обоих хранилищах
@@ -292,11 +307,13 @@ public class OperationManager extends CommonManager<Operation> implements Operat
                     ConvertOperation convertOperation = (ConvertOperation) operation;
 
                     // для хранилища, откуда перевели деньги - отнимаем сумму операции
-                    BigDecimal currentAmountFromStorage = convertOperation.getFromStorage().getAmount(convertOperation.getFromCurrency());// получаем текущее значение остатка (баланса)
+                    BigDecimal tmpAmount = convertOperation.getFromStorage().getAmount(convertOperation.getFromCurrency());
+                    BigDecimal currentAmountFromStorage = (tmpAmount != null) ? tmpAmount : BigDecimal.ZERO;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountFromStorage = currentAmountFromStorage.subtract(convertOperation.getFromAmount()); // сколько отнимаем
 
                     // для хранилища, куда перевели деньги - прибавляем сумму операции
-                    BigDecimal currentAmountToStorage = convertOperation.getToStorage().getAmount(convertOperation.getToCurrency());// получаем текущее значение остатка (баланса)
+                    tmpAmount = convertOperation.getToStorage().getAmount(convertOperation.getToCurrency());
+                    BigDecimal currentAmountToStorage = (tmpAmount != null) ? tmpAmount : BigDecimal.ZERO;// получаем текущее значение остатка (баланса)
                     BigDecimal newAmountToStorage = currentAmountToStorage.add(convertOperation.getToAmount()); // сколько прибавляем
 
 
@@ -323,6 +340,8 @@ public class OperationManager extends CommonManager<Operation> implements Operat
 
     private void addToCollections(Operation operation) {
         operationList.add(operation);
+        //TODO продумать упорядочевание, чтобы правильно обновлялся узел при вызове notifyItemChanged(currentEditPosition)
+        Collections.sort(operationList);
         identityMap.put(operation.getId(), operation);
         operationMap.get(operation.getOperationType()).add(operation);
     }

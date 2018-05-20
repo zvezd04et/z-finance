@@ -3,6 +3,7 @@ package com.z_soft.z_finance.activities.abstracts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -41,7 +42,7 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
     protected void initToolbar() {
         super.initToolbar();
 
-        icBack = (ImageView) findViewById(R.id.ic_back_node);
+        icBack = findViewById(R.id.ic_back_node);
 
         mode = getIntent().getIntExtra(AppContext.LIST_VIEW_MODE, 0); // режим работы со справочником
 
@@ -95,7 +96,7 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
         icBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ActivityCompat.finishAfterTransition(TreeListActivity.this);
             }
         });
 
@@ -118,7 +119,7 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
                     icBack.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            ActivityCompat.finishAfterTransition(TreeListActivity.this);
                         }
                     });
 
@@ -149,6 +150,7 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
             if (icBack.isShown()) { // если кнопка видна - значит находимся в дочернем списке
                 icBack.callOnClick(); // симулируем кнопку "назад" - переходим на уровень выше, к родительским элементам
             }else {
+
                 super.onBackPressed();
 
             }
@@ -201,6 +203,8 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
         Intent intent = new Intent();
         intent.putExtra(NODE_OBJECT, selectedNode);// выбранная категория
         setResult(RESULT_OK, intent);
+
+        ActivityCompat.finishAfterTransition(TreeListActivity.this);
     }
 
 
