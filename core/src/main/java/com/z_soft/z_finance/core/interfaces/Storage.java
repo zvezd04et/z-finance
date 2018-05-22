@@ -21,6 +21,8 @@ public interface Storage extends TreeNode{
     // изменение баланса
     void updateAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException; // изменение баланса по определенной валюте
 
+    void  deleteAllCurrencies();
+
     // работа с валютами (в отдельный интерфейс нет смысла выделять)
     Currency getCurrency(String code) throws CurrencyException;	// поулчить валюту по коду
     void addCurrency(Currency currency, BigDecimal initAmount) throws CurrencyException; // добавить новую валюту в хранилище с начальной суммой

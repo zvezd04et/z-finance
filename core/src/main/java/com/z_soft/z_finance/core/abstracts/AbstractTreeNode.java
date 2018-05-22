@@ -50,6 +50,7 @@ public abstract class AbstractTreeNode<T extends TreeNode> implements TreeNode<T
     }
 
 
+    @Override
     public int getRefCount() {
         return refCount;
     }

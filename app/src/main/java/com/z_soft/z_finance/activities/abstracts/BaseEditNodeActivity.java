@@ -18,6 +18,8 @@ import com.z_soft.z_finance.core.interfaces.IconNode;
 import com.z_soft.z_finance.utils.AppContext;
 import com.z_soft.z_finance.utils.IconUtils;
 
+import java.math.BigDecimal;
+
 // общие поля и реалищация для активити редактирования справочных значений
 public abstract class BaseEditNodeActivity<T extends IconNode> extends AppCompatActivity {
 
@@ -146,6 +148,17 @@ public abstract class BaseEditNodeActivity<T extends IconNode> extends AppCompat
                 (node.getIconName() == null && newIconName != null) || // если иконка объекта не была указана и пользователь выбрал иконку из списка
                 (node.getName() != null && newName != null && !node.getName().equals(newName)) || // если название было заполнено и пользователь ввел новое имя, отличное от старого
                 (node.getIconName() != null && newIconName != null && !node.getIconName().equals(newIconName)); // если пользователь выбрал новую иконку
+
+    }
+
+    // конвертация из текста, введенного пользователем - в BigDecimal (для корректного сохранения)
+    protected BigDecimal convertString(String value){
+
+        if (value.trim().length()!=0){
+            return new BigDecimal(value);
+        }
+
+        return BigDecimal.ZERO;
 
     }
 

@@ -7,81 +7,242 @@
     tools:context=".activities.edit.EditStorageActivity">
 
 
-    <include layout="@layout/node_edit_actions"/>
+    <include layout="@layout/node_edit_actions" />
 
 
-
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:id="@+id/relativeLayout"
-
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
+        android:layout_marginBottom="40dp"
 
         >
 
-        <TextView
-            android:id="@+id/tv_node_name"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="@string/name"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
-            />
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:paddingLeft="30dp"
+
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
 
 
-        <TextView
-            android:id="@+id/tv_node_icon_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_node_name"
-            android:layout_below="@id/tv_node_name"
-            android:text="@string/icon"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
-            android:layout_marginTop="40dp" />
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/tv_node_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/name"
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                <TextView
+                    android:id="@+id/tv_node_icon_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_node_name"
+                    android:layout_below="@id/tv_node_name"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/icon"
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                <EditText
+                    android:id="@+id/et_node_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/tv_node_name"
+
+                    android:layout_alignParentRight="true"
+                    android:maxEms="20"
+
+                    android:singleLine="true"
+                    android:text="value"
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+
+
+                    />
+
+
+                <ImageView
+                    android:id="@+id/img_node_icon"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignBottom="@id/tv_node_icon_label"
+                    android:layout_alignParentRight="true" />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/layout_name"
+
+                android:layout_centerVertical="true"
+
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
 
 
 
 
+                android:layout_marginTop="30dp">
 
-        <EditText
-            android:id="@+id/et_node_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
+                <RelativeLayout
+                    android:id="@+id/layout_subtitle_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="15dp"
 
-            android:text="value"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    >
 
-            android:maxEms="20"
-            android:layout_alignParentRight="true"
-            android:layout_alignBaseline="@id/tv_node_name"
-
-
-            />
-
-
-
-
-        <ImageView
-            android:id="@+id/img_node_icon"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/tv_node_icon_label" />
+                    <TextView
+                        android:id="@+id/tv_subtitle_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/balance"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textColor="@color/colorSwipeBackground"
+                        android:textStyle="bold" />
 
 
+                </RelativeLayout>
 
 
+                <RelativeLayout
+                    android:id="@+id/layout_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="15dp">
+
+                    <TableLayout
+                        android:id="@+id/tbl_currency_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
 
-    </RelativeLayout>
+                    </TableLayout>
 
 
+                    <View
+                        android:id="@+id/line_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/tbl_currency_amount"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/colorGray"
+                        android:gravity="bottom" />
 
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_total_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/layout_balance"
+                    android:layout_centerVertical="true"
+                    android:paddingRight="30dp"
+                    android:text="total"
+                    android:textColor="@color/colorText"
+                    android:textStyle="bold" />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/layout_balance"
+                android:layout_centerVertical="true"
+
+                android:layout_marginTop="30dp"
+
+
+                >
+
+
+                <RelativeLayout
+                    android:id="@+id/layout_subtitle_currency_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="15dp">
+
+                    <TextView
+                        android:id="@+id/tv_subtitle_currency_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/currency_list"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textColor="@color/colorSwipeBackground"
+                        android:textStyle="bold" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layout_currency_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/layout_subtitle_currency_list"
+                    android:background="@drawable/ripple_rectangle"
+
+
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    >
+
+                    <TableLayout
+                        android:id="@+id/tbl_currency_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                    </TableLayout>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 </RelativeLayout>

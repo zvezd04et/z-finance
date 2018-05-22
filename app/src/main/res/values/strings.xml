@@ -24,6 +24,7 @@
 
     <string name="confirm">Confirm</string>
     <string name="confirm_delete">Delete record?</string>
+    <string name="confirm_delete_amount">Delete amount?</string>
     <string name="has_operations">Can\'t delete record with operations</string>
     <string name="deleted">Cancel delete?</string>
     <string name="undo">UNDO</string>
@@ -64,5 +65,10 @@
 
     <string name="no_available_currency">No available currency</string>
     <string name="currency_not_exist">currency not exist for storage</string>
+
+    <string name="select_value">Select value</string>
+    <string name="balance">Balance</string>
+
+    <string name="currency_list">Available currencies</string>
 
 </resources>

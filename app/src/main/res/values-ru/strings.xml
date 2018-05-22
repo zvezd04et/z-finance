@@ -24,6 +24,7 @@
 
     <string name="confirm">Подтверждение</string>
     <string name="confirm_delete">Действительно хотите удалить?</string>
+    <string name="confirm_delete_amount">Удалить валюту?</string>
     <string name="has_operations">Нельзя удалить запись, которая используется в операции</string>
     <string name="deleted">Запись удалена</string>
     <string name="undo">ОТМЕНИТЬ</string>
@@ -60,5 +61,10 @@
     <string name="operation_type">Тип операции</string>
 
     <string name="no_available_currency">Нет доступных валют для вабранного счета</string>
+
+    <string name="select_value">Выберите значение</string>
+    <string name="balance">Баланс</string>
+
+    <string name="currency_list">Доступные валюты</string>
 
 </resources>
