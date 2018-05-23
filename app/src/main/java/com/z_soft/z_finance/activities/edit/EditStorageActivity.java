@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -263,6 +264,7 @@ public class EditStorageActivity extends BaseEditNodeActivity<Storage> {
 
         EditText etAmount = new EditText(EditStorageActivity.this);
         etAmount.setText(value);
+        etAmount.setInputType((InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER));
 
 
         etAmount.setLayoutParams(lp);

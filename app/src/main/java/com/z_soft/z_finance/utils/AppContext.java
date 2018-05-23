@@ -2,6 +2,8 @@ package com.z_soft.z_finance.utils;
 
 import android.app.Application;
 
+import java.util.Locale;
+
 public class AppContext extends Application{
 
     private static final String TAG = AppContext.class.getName();
@@ -27,11 +29,14 @@ public class AppContext extends Application{
 
     public static final String DATE_CALENDAR = "AppContext.DATE_CALENDAR";
 
+    public static Locale defaultLocale;
+
     @Override
     public void onCreate() {
         super.onCreate();
         IconUtils.fillIcons(this); // один раз при загрузке приложения загружаем иконки
         OperationTypeUtils.init(this); // локализованные обертки для типов операций
+        defaultLocale = getResources().getConfiguration().locale; // сохранить локаль для всего приложения
     }
 
 }

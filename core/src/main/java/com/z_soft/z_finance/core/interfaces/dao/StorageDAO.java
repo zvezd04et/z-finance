@@ -12,5 +12,6 @@ public interface StorageDAO extends CommonDAO<Storage> {
     boolean addCurrency(Storage storage, Currency currency, BigDecimal initAmount) throws CurrencyException;
     boolean deleteCurrency(Storage storage, Currency currency) throws CurrencyException;
     boolean updateAmount(Storage storage, Currency currency, BigDecimal amount);// сюда входит прибавить, отнять и обновить
+    int getRefCount(Storage storage);
 
 }

@@ -74,7 +74,7 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
             switch (requestCode) {
                 // если был запрос на добавление дочернего элемента
                 case REQUEST_NODE_ADD_CHILD:
-                    addChild(data);
+                    addChild((T)data.getSerializableExtra(NODE_OBJECT));
                     break;
             }
 
@@ -82,9 +82,8 @@ public abstract class TreeListActivity<T extends TreeNode> extends BaseListActiv
 
     }
 
-    private void addChild(Intent data) {
-        T node = (T) data.getSerializableExtra(NODE_OBJECT);
-        node.setParent(selectedNode);
+    private void addChild(T node) {
+        node.setParent(selectedNode); // прописать родительский элемент, который запомнили ранее в selectedNode
         fragment.insertChildNode(node);// отправляем на добавление новый объект
     }
 

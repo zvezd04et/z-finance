@@ -67,4 +67,6 @@
 
     <string name="currency_list">Доступные валюты</string>
 
+    <string name="total_balance">Общий остаток:</string>
+
 </resources>

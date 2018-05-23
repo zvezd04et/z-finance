@@ -62,6 +62,10 @@ public class StorageManager extends CommonManager<Storage> implements StorageDAO
             // не нужно пробегать по всем коллекциям и обновлять в них
             s.setName(storage.getName());
             s.setIconName(storage.getIconName());
+            s.getCurrencyAmounts().clear();
+            s.getAvailableCurrencies().clear();
+            s.getCurrencyAmounts().putAll(storage.getCurrencyAmounts());
+            s.getAvailableCurrencies().addAll(storage.getAvailableCurrencies());
 
             return true;
         }
@@ -120,7 +124,7 @@ public class StorageManager extends CommonManager<Storage> implements StorageDAO
     @Override
     public boolean addCurrency(Storage storage, Currency currency, BigDecimal initAmount) throws CurrencyException {
         if (storageDAO.addCurrency(storage, currency, initAmount)) {// если в БД добавилось нормально
-            storage.addCurrency(currency, initAmount);
+            identityMap.get(storage.getId()).addCurrency(currency, initAmount);
             return true;
         }
 
@@ -130,7 +134,7 @@ public class StorageManager extends CommonManager<Storage> implements StorageDAO
     @Override
     public boolean deleteCurrency(Storage storage, Currency currency) throws CurrencyException {
         if (storageDAO.deleteCurrency(storage, currency)) {// если в БД удалилось нормально
-            storage.deleteCurrency(currency);
+            identityMap.get(storage.getId()).deleteCurrency(currency);
             return true;
         }
         return false;
@@ -142,7 +146,7 @@ public class StorageManager extends CommonManager<Storage> implements StorageDAO
 
         if (storageDAO.updateAmount(storage, currency, amount)) {
             try {
-                storage.updateAmount(amount, currency);
+                identityMap.get(storage.getId()).updateAmount(amount, currency);
             } catch (CurrencyException e) {
                 e.printStackTrace();
             } catch (AmountException e) {
@@ -153,6 +157,25 @@ public class StorageManager extends CommonManager<Storage> implements StorageDAO
 
         return false;
 
+    }
+
+    @Override
+    public int getRefCount(Storage storage){
+        return storageDAO.getRefCount(storage);
+    }
+
+    public BigDecimal getTotalBalance(Currency currency){
+        BigDecimal sum = BigDecimal.ZERO;
+
+        for (Storage s: treeList) {
+            try {
+                sum = sum.add(s.getApproxAmount(currency));
+            } catch (CurrencyException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return sum;
     }
 
     // если понадобится напрямую получить объекты из БД - можно использовать storageDAO

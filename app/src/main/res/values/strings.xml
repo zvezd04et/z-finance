@@ -71,4 +71,6 @@
 
     <string name="currency_list">Available currencies</string>
 
+    <string name="total_balance">Total amount:</string>
+
 </resources>

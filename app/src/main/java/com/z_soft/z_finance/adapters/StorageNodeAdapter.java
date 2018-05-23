@@ -2,15 +2,21 @@ package com.z_soft.z_finance.adapters;
 
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.z_soft.z_finance.activities.edit.EditStorageActivity;
 import com.z_soft.z_finance.adapters.abstracts.TreeNodeListAdapter;
 import com.z_soft.z_finance.adapters.holders.StorageViewHolder;
 import com.z_soft.z_finance.core.database.Initializer;
+import com.z_soft.z_finance.core.exceptions.CurrencyException;
 import com.z_soft.z_finance.core.impls.DefaultStorage;
 import com.z_soft.z_finance.core.interfaces.Storage;
 import com.z_soft.z_finance.utils.AppContext;
+import com.z_soft.z_finance.utils.CurrencyUtils;
+
+import java.math.BigDecimal;
 
 public class StorageNodeAdapter extends TreeNodeListAdapter<Storage, StorageViewHolder> {
 
@@ -59,8 +65,19 @@ public class StorageNodeAdapter extends TreeNodeListAdapter<Storage, StorageView
 
         final Storage storage = adapterList.get(position);// определяем выбранный пункт
 
+        try {
+            BigDecimal approxAmount = storage.getApproxAmount(CurrencyUtils.defaultCurrency);
+            if (approxAmount != null && !approxAmount.equals(BigDecimal.ZERO)) {
+                approxAmount = approxAmount.setScale(0, BigDecimal.ROUND_UP);
+                holder.tvAmount.setText("~ " + String.valueOf(approxAmount) + " " + CurrencyUtils.defaultCurrency.getSymbol());
+                holder.tvAmount.setVisibility(View.VISIBLE);
+            }else{
+                holder.tvAmount.setVisibility(View.INVISIBLE);
+            }
 
-//        holder.tvAmount.setText(storage.get);
+        } catch (CurrencyException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
 

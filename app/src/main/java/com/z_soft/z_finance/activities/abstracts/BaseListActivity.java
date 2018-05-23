@@ -132,4 +132,14 @@ public abstract class BaseListActivity<T extends IconNode, F extends BaseNodeLis
         startActivity(a);
 
     }
+
+    // методы слушателя, можно оставить пустыми, чтобы в дочерних классах переопределять только необходимые методы
+    @Override
+    public void onAdd(T node) {}
+
+    @Override
+    public void onDelete(T node) {}
+
+    @Override
+    public void onUpdate(T node) {}
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
+import android.widget.TextView;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.abstracts.TreeListActivity;
@@ -17,11 +18,15 @@ import com.z_soft.z_finance.core.interfaces.Storage;
 import com.z_soft.z_finance.fragments.TreeNodeListFragment;
 import com.z_soft.z_finance.utils.AppContext;
 import com.z_soft.z_finance.utils.CurencyUtils;
+import com.z_soft.z_finance.utils.CurrencyUtils;
 
 import java.math.BigDecimal;
 
 public class StorageListActivity extends TreeListActivity<Storage> {
 
+    protected static final String TAG = StorageListActivity.class.getName();
+
+    private TextView tvTotalBalance;
 
     public StorageListActivity() {
 
@@ -35,6 +40,10 @@ public class StorageListActivity extends TreeListActivity<Storage> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); // обязательно нужно вызывать
+
+        tvTotalBalance = findViewById(R.id.tv_total_balance);
+
+        refreshTotalBalance();
 
         fragment.setAdapter(new StorageNodeAdapter(mode));
 
@@ -76,7 +85,44 @@ public class StorageListActivity extends TreeListActivity<Storage> {
 
     }
 
+    // обновить общую сумму по всем счетам
+    public void refreshTotalBalance() {
+        if (mode == AppContext.EDIT_MODE) {
+            if (!Initializer.getStorageManager().getAll().isEmpty()) {
+                tvTotalBalance.setVisibility(View.VISIBLE); // показываем элемент только при обычном просмотре справочников (не из редактируемой операции)
+                tvTotalBalance.setText(getResources().getString(R.string.total_balance) + " ~ " +  Initializer.getStorageManager().getTotalBalance(CurrencyUtils.defaultCurrency).setScale(0, BigDecimal.ROUND_UP).toString() + " " + CurrencyUtils.defaultCurrency.getSymbol(AppContext.defaultLocale));
+            } else {
+                tvTotalBalance.setVisibility(View.GONE); // если нет доступных счетов - не показываем баланс
+            }
+        }
+    }
+
+    // при добавлении, изменении удаления любого счета - сразу обновляем общий баланс по всем счетам
+    @Override
+    public void onAdd(Storage node) {
+        super.onAdd(node);
+        refreshTotalBalance();
+    }
+
+    @Override
+    public void onDelete(Storage node) {
+        super.onDelete(node);
+        refreshTotalBalance();
+    }
+
+    @Override
+    public void onUpdate(Storage node) {
+        super.onUpdate(node);
+        refreshTotalBalance();
+    }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode == RESULT_OK) {
+            refreshTotalBalance();
+        }
+    }
 }

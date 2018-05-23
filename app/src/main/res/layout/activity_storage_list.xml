@@ -22,26 +22,42 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/storage_action_bar"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <include layout="@layout/tree_list_actions"/>
+                <include layout="@layout/tree_list_actions" />
 
 
             </android.support.design.widget.AppBarLayout>
 
+            <TextView
+                android:id="@+id/tv_total_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/storage_action_bar"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="15dp"
+                android:text="value"
+                android:textSize="15sp"
+                android:textColor="@color/colorGreen"
+                android:textStyle="bold"
+                android:visibility="gone"
 
-            <include layout="@layout/frame_node_list"
+                />
+
+
+            <include
+                layout="@layout/frame_node_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/storage_action_bar"
+                android:layout_below="@id/tv_total_balance"
+
 
                 />
 
         </RelativeLayout>
-
 
 
     </android.support.design.widget.CoordinatorLayout>
