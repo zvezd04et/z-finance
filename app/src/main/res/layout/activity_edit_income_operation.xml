@@ -27,7 +27,7 @@
             >
 
             <RelativeLayout
-                android:id="@+id/relativeLayout"
+                android:id="@+id/layout_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/scroll"
@@ -130,7 +130,7 @@
 
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="source"
+                            android:text="@string/select_value"
 
 
                             android:textAppearance="@android:style/TextAppearance.Material.Medium" />
@@ -182,7 +182,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:maxEms="20"
-                            android:text="storage"
+                            android:text="@string/select_value"
                             android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
 
@@ -251,7 +251,8 @@
 
                             android:maxEms="20"
                             android:singleLine="true"
-                            android:text="value"
+                            android:text="0"
+                            android:inputType="numberDecimal"
                             android:textAppearance="@android:style/TextAppearance.Material.Medium"
                             android:textColor="@android:color/tertiary_text_dark"
 
@@ -325,7 +326,6 @@
                             android:inputType="textMultiLine"
 
                             android:padding="10dp"
-                            android:text="text"
                             android:textColor="@color/colorText"
 
 

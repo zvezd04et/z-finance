@@ -21,11 +21,15 @@ import com.z_soft.z_finance.utils.IconUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.animators.BaseItemAnimator;
 
 public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseViewHolder, L extends BaseNodeActionListener<T>> extends RecyclerView.Adapter<VH> {
+
+    protected Comparator comparator;
 
     protected static final String TAG = BaseNodeListAdapter.class.getName();
 
@@ -157,7 +161,7 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
             protected void animateRemoveImpl(final RecyclerView.ViewHolder holder) {
                 ViewCompat.animate(holder.itemView)
                         .translationX(holder.itemView.getRootView().getWidth())
-                        .setDuration(getRemoveDuration())
+                        .setDuration(getMoveDuration())
                         .setInterpolator(mInterpolator)
                         .setListener(new DefaultRemoveVpaListener(holder))
                         .setStartDelay(getRemoveDelay(holder))
@@ -173,7 +177,7 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
             protected void animateAddImpl(final RecyclerView.ViewHolder holder) {
                 ViewCompat.animate(holder.itemView)
                         .translationX(0)
-                        .setDuration(getAddDuration())
+                        .setDuration(getMoveDuration())
                         .setInterpolator(mInterpolator)
                         .setListener(new DefaultAddVpaListener(holder))
                         .setStartDelay(getAddDelay(holder))
@@ -190,7 +194,7 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
 
                 ViewCompat.animate(holder.itemView)
                         .translationX(-holder.itemView.getRootView().getWidth())
-                        .setDuration(getRemoveDuration())
+                        .setDuration(getMoveDuration())
                         .setInterpolator(mInterpolator)
                         .setListener(new DefaultRemoveVpaListener(holder))
                         .setStartDelay(getRemoveDelay(holder))
@@ -207,7 +211,7 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
             protected void animateAddImpl(final RecyclerView.ViewHolder holder) {
                 ViewCompat.animate(holder.itemView)
                         .translationX(0)
-                        .setDuration(getAddDuration())
+                        .setDuration(getMoveDuration())
                         .setInterpolator(mInterpolator)
                         .setListener(new DefaultAddVpaListener(holder))
                         .setStartDelay(getAddDelay(holder))
@@ -275,6 +279,7 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
                 adapterList.add(position, node);// возвращаем обратно
 //                                notifyItemInserted(position);
 
+                listener.onAdd(node);
                 notifyDataSetChanged();
 
             }
@@ -297,6 +302,12 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
     // метод обновления данных может вызываться из фрагмента, где используется данный адаптер
     public void refreshList(final List<T> list, RecyclerView.ItemAnimator animator) {
 
+        // для анимации передвижаения списка - сначала нужно удалить все элементы
+        if (list.isEmpty()){
+            int range = adapterList.size();
+            notifyItemRangeRemoved(0, range);
+            return;
+        }
 
         if (snackbar != null && snackbar.isShown()) {
             closeSnackBar();
@@ -320,7 +331,16 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
     public void addNode(T node) {
         try {
             manager.add(node);// сначала вставляем в БД и общую коллекцию
-            notifyItemInserted(adapterList.size() - 1);// вставка в последнюю позицию
+            if (comparator!=null) {
+                Collections.sort(adapterList, comparator);
+            }
+
+//            notifyItemInserted(adapterList.size() - 1);// вставка в последнюю позицию
+//            recyclerView.scrollToPosition(adapterList.size() - 1);
+
+            listener.onAdd(node); // уведомляем слушателя (нужно например для списка source - чтобы сразу обновлять общий баланс
+
+            notifyDataSetChanged();
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -331,7 +351,14 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
     public void updateNode(T node) {
         try {
             manager.update(node);
-            notifyItemChanged(currentEditPosition);
+            if (comparator!=null) {
+                Collections.sort(adapterList, comparator);
+            }
+
+            listener.onUpdate(node); // уведомляем слушателя (нужно например для списка source - чтобы сразу обновлять общий баланс
+
+//            notifyItemChanged(currentEditPosition);
+            notifyDataSetChanged();
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -346,6 +373,7 @@ public abstract class BaseNodeListAdapter<T extends IconNode, VH extends BaseVie
             // ранее уже удалили запись из списка - поэтому не вызываем  notifyItemRemoved(position), а просто удаляем из БД
             manager.delete(node);
             notifyDataSetChanged(); // этот метод также нужен, если пользователь нажмет отмену удаления и успеет перейти в другой список
+            listener.onDelete(node); // уведомляем слушателя (нужно например для списка source - чтобы сразу обновлять общий баланс
             return true;
 
         } catch (SQLException e) {

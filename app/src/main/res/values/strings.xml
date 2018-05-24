@@ -39,7 +39,13 @@
 
     <string name="enter_name">Enter name</string>
     <string name="enter_value">Enter value</string>
+    <string name="enter_amount">Enter amount</string>
     <string name="type">Type</string>
+
+    <string name="select_source_from">Select source FROM</string>
+    <string name="select_source_to">Select source TO</string>
+    <string name="select_storage_from">Select storage FROM</string>
+    <string name="select_storage_to">Select storage TO</string>
 
     <string name="income">Income</string>
     <string name="outcome">Outcome</string>

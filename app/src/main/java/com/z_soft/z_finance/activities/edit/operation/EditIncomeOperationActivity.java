@@ -32,6 +32,7 @@ import com.z_soft.z_finance.utils.IconUtils;
 import com.z_soft.z_finance.utils.OperationTypeUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
@@ -39,22 +40,17 @@ import java.util.List;
 public class EditIncomeOperationActivity extends BaseEditOperationActivity<IncomeOperation> {
 
 
-    // специфичные поля для типа операции Доход
-
     protected TextView tvOperationSource;
     protected ViewGroup layoutOperationSource;
+    protected ImageView icOperationSource;
 
 
     protected TextView tvOperationStorage;
+    protected ImageView icOperationStorage;
     protected ViewGroup layoutOperationStorage;
-
 
     protected EditText etOperationAmount;
     protected Spinner spnCurrency;
-
-
-    protected ImageView icOperationSource;
-    protected ImageView icOperationStorage;
 
 
     public EditIncomeOperationActivity() {
@@ -63,44 +59,25 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
 
 
     // список возможных валют для операции
-    private List<Currency> currencyList;
-    private ArrayAdapter<Currency> сurrencyAdapter;
+    private List<Currency> currencyList = new ArrayList<>();
+    private ArrayAdapter<Currency> currencyAdapter;
 
 
-    // метод работает со специфичными компонентами
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // получаем список доступных валют из storage
-        currencyList = operation.getToStorage().getAvailableCurrencies();
-
-        fillCurrencySpinner();
-
-        // установка всех значений
+        initComponents();
 
         tvOperationType.setText(OperationTypeUtils.incomeType.toString());
-        tvOperationType.setBackgroundColor(ContextCompat.getColor(this, ColorUtils.incomeColor));
+        tvOperationType.setBackgroundColor(ContextCompat.getColor(EditIncomeOperationActivity.this, ColorUtils.incomeColor));
 
-        icOperationSource = (ImageView) findViewById(R.id.ic_operation_source_selected);
-        icOperationStorage = (ImageView) findViewById(R.id.ic_operation_storage_selected);
-
-        tvOperationSource = (TextView) findViewById(R.id.tv_operation_source_selected);
-        tvOperationStorage = (TextView) findViewById(R.id.tv_operation_storage_selected);
-        etOperationAmount = (EditText) findViewById(R.id.et_operation_amount_selected);
-
-        tvOperationSource.setText(operation.getFromSource().getName());//.toUpperCase()
-        tvOperationStorage.setText(operation.getToStorage().getName());//.toUpperCase()
-        etOperationAmount.setText(operation.getFromAmount().toString());
-
-        icOperationSource.setImageDrawable(IconUtils.getIcon(operation.getFromSource().getIconName()));
-        icOperationStorage.setImageDrawable(IconUtils.getIcon(operation.getToStorage().getIconName()));
-
-        layoutOperationSource = (ViewGroup) findViewById(R.id.layout_operation_source);
-        layoutOperationStorage = (ViewGroup) findViewById(R.id.layout_operation_storage);
+        if (actionType == AppContext.OPERATION_EDIT) {
+            setValues();
+        }
 
 
-        // для выбора нового справочного значения storage
+        // для выбора справочного значения storage
         layoutOperationStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +88,8 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
 
                 // передаем SELECT_MODE, чтобы выбранный объект возвращался обратно в этот активити
                 intent.putExtra(AppContext.LIST_VIEW_MODE, AppContext.SELECT_MODE);
-                ActivityCompat.startActivityForResult(EditIncomeOperationActivity.this, intent, REQUEST_SELECT_STORAGE, ActivityOptionsCompat.makeSceneTransitionAnimation(EditIncomeOperationActivity.this).toBundle()); // REQUEST_NODE_EDIT - индикатор, кто является инициатором); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+                ActivityCompat.startActivityForResult(EditIncomeOperationActivity.this,intent, REQUEST_SELECT_STORAGE_TO, ActivityOptionsCompat.makeSceneTransitionAnimation(EditIncomeOperationActivity.this).toBundle());
+
 
             }
 
@@ -119,8 +97,7 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
         });
 
 
-
-        // для выбора нового справочного значения source
+        // для выбора справочного значения source
         layoutOperationSource.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +111,9 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
 
                 // параметр для фильтрации списка по типу (чтобы не все source показывал, а только по этому типу)
                 intent.putExtra(AppContext.LIST_TYPE, OperationType.INCOME.getId());// передаем параметр, который позволит выбирать значение и возвращать его
-                ActivityCompat.startActivityForResult(EditIncomeOperationActivity.this,intent, REQUEST_SELECT_SOURCE, ActivityOptionsCompat.makeSceneTransitionAnimation(EditIncomeOperationActivity.this).toBundle());
+
+                ActivityCompat.startActivityForResult(EditIncomeOperationActivity.this,intent, REQUEST_SELECT_SOURCE_FROM, ActivityOptionsCompat.makeSceneTransitionAnimation(EditIncomeOperationActivity.this).toBundle());
+
 
             }
 
@@ -142,31 +121,27 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
         });
 
 
-        // слушатель события при нажатии на кнопку сохранения
         imgSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                // не давать сохранять пустое значение
-                if (etOperationAmount.getText().length() == 0) {
-                    Toast.makeText(EditIncomeOperationActivity.this, R.string.enter_name, Toast.LENGTH_SHORT).show();
+                if (!checkValues()) {
                     return;
                 }
 
-                operation.setFromAmount(new BigDecimal(etOperationAmount.getText().toString()));
+                operation.setFromAmount(convertString(etOperationAmount.getText().toString()));
+
                 operation.setDescription(etOperationDesc.getText().toString());
-                operation.setDateTime(newCalendarValue);
-                operation.setFromCurrency((Currency)spnCurrency.getSelectedItem());
+                operation.setDateTime(calendar);
+
+                operation.setFromCurrency((Currency) spnCurrency.getSelectedItem());
 
 
                 Intent intent = new Intent();
                 intent.putExtra(AppContext.NODE_OBJECT, operation);// сюда попадает уже отредактированный объект, который нужно сохранить в БД
                 setResult(RESULT_OK, intent);
 
-
-                ActivityCompat.finishAfterTransition(EditIncomeOperationActivity.this);
-
+                ActivityCompat.finishAfterTransition(EditIncomeOperationActivity.this);//закрыть активити
             }
 
 
@@ -175,12 +150,71 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
 
     }
 
+    private void setValues() {
+
+        initCurrencySpinner();
+
+        tvOperationSource.setText(operation.getFromSource().getName().toUpperCase());
+        tvOperationStorage.setText(operation.getToStorage().getName().toUpperCase());
+        etOperationAmount.setText(operation.getFromAmount().toString());
+
+        icOperationSource.setImageDrawable(IconUtils.getIcon(operation.getFromSource().getIconName()));
+        icOperationStorage.setImageDrawable(IconUtils.getIcon(operation.getToStorage().getIconName()));
+    }
+
+    private void initComponents() {
+        icOperationSource = findViewById(R.id.ic_operation_source_selected);
+        icOperationStorage = findViewById(R.id.ic_operation_storage_selected);
+
+        tvOperationSource = findViewById(R.id.tv_operation_source_selected);
+        tvOperationStorage = findViewById(R.id.tv_operation_storage_selected);
+        etOperationAmount = findViewById(R.id.et_operation_amount_selected);
+
+        layoutOperationSource = findViewById(R.id.layout_operation_source);
+        layoutOperationStorage = findViewById(R.id.layout_operation_storage);
+
+        spnCurrency = findViewById(R.id.spn_currency);
+        currencyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, currencyList);
+        spnCurrency.setAdapter(currencyAdapter);
+
+    }
+
+
+    // проверяет, заполнены ли обязательные значения
+    private boolean checkValues() {
+
+        if (etOperationAmount.getText().length() == 0) {
+            Toast.makeText(EditIncomeOperationActivity.this, R.string.enter_amount, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+        if (operation.getFromSource() == null) {
+            Toast.makeText(EditIncomeOperationActivity.this, R.string.select_source_from, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (operation.getToStorage() == null) {
+            Toast.makeText(EditIncomeOperationActivity.this, R.string.select_storage_to, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+        return true;// если все проверки прошли успешно - возвращается true
+
+    }
+
 
     // заполнить выпадающий список значениями валют
-    private void fillCurrencySpinner() {
-        сurrencyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, currencyList);
-        spnCurrency = (Spinner) findViewById(R.id.spn_currency);
-        spnCurrency.setAdapter(сurrencyAdapter);
+    private void initCurrencySpinner() {
+
+        currencyList.clear();
+        currencyList.addAll(operation.getToStorage().getAvailableCurrencies());
+
+        currencyAdapter.clear();
+        currencyAdapter.addAll(operation.getToStorage().getAvailableCurrencies());
+
+        currencyAdapter.notifyDataSetChanged();
         spnCurrency.setSelection(currencyList.indexOf(operation.getFromCurrency()));
     }
 
@@ -193,46 +227,43 @@ public class EditIncomeOperationActivity extends BaseEditOperationActivity<Incom
         if (resultCode == RESULT_OK) {
 
             switch (requestCode) {
-                case REQUEST_SELECT_STORAGE: // если выбирали storage
-                    Storage storage = (Storage) data.getSerializableExtra(AppContext.NODE_OBJECT); // получаем выбранную категорию
+                case REQUEST_SELECT_STORAGE_TO: // если выбирали storage
+                    Storage storage = (Storage) data.getSerializableExtra(AppContext.NODE_OBJECT);
                     operation.setToStorage(storage);
                     icOperationStorage.setImageDrawable(IconUtils.getIcon(storage.getIconName()));
-                    currentNodeSelect.setText(storage.getName()); //.toUpperCase()
-
-                    сurrencyAdapter.clear();
-                    сurrencyAdapter.addAll(storage.getAvailableCurrencies());
+                    currentNodeSelect.setText(storage.getName().toUpperCase());
 
 
-                    if (storage.getAvailableCurrencies().isEmpty()){
-                        Toast.makeText(EditIncomeOperationActivity.this, R.string.no_available_currency, Toast.LENGTH_SHORT).show();
-                    }else {
-                        // если у нового выбранного счета нет той валюты, которая ранее была установлена у операции - уведомляем пользователя об этом
-                        if (!storage.getAvailableCurrencies().contains(spnCurrency.getSelectedItem())) {
-                            spnCurrency.setSelection(0);// выбрать первую валюту из списка
-                            Toast.makeText(EditIncomeOperationActivity.this, R.string.currency+" "+operation.getFromCurrency().getDisplayName() + " "+R.string.currency_not_exist, Toast.LENGTH_SHORT).show();
-                        } else {
-                            spnCurrency.setSelection(currencyList.indexOf(operation.getFromCurrency())); // выбрать ранее установленную валюту операции
-                        }
-                    }
-
-                    // обновляем список валют
-                    currencyList.clear();
-                    currencyList.addAll(storage.getAvailableCurrencies());
+                    updateCurrencyList(storage, currencyList, currencyAdapter, spnCurrency);
 
 
                     break;
 
 
-                case REQUEST_SELECT_SOURCE: // если выбирали source
-                    Source source = (Source) data.getSerializableExtra(AppContext.NODE_OBJECT); // получаем выбранную категорию
+                case REQUEST_SELECT_SOURCE_FROM: // если выбирали source
+                    Source source = (Source) data.getSerializableExtra(AppContext.NODE_OBJECT);
                     operation.setFromSource(source);
                     icOperationSource.setImageDrawable(IconUtils.getIcon(source.getIconName()));
-                    currentNodeSelect.setText(source.getName()); //.toUpperCase(
+                    currentNodeSelect.setText(source.getName().toUpperCase());
                     break;
+
 
             }
 
+
         }
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (operation.getToStorage()!=null){
+            updateCurrencyList(operation.getToStorage(), currencyList, currencyAdapter, spnCurrency);
+        }
+
 
     }
 

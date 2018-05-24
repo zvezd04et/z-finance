@@ -23,6 +23,11 @@ public class AppContext extends Application{
     // в этом режиме при выборе значения, у которого нет дочерних элементов, будет выполнять редактирование
     public static final int EDIT_MODE = 101;
 
+    // режимы работы с операцией
+    public final static String OPERATION_ACTION = "OperationAction"; // ключ для Intent
+    // значения
+    public final static int OPERATION_EDIT = 201;
+    public final static int OPERATION_ADD = 202;
 
     public static final String LIST_VIEW_MODE = "TreeNodeListAdapter.ViewMode";
     public static final String LIST_TYPE = "TreeNodeListAdapter.Type";

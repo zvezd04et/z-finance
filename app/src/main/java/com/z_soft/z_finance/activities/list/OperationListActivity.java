@@ -1,13 +1,20 @@
 package com.z_soft.z_finance.activities.list;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.view.View;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.abstracts.BaseListActivity;
+import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
 import com.z_soft.z_finance.adapters.OperationListAdapter;
+import com.z_soft.z_finance.core.impls.operations.IncomeOperation;
 import com.z_soft.z_finance.core.interfaces.Operation;
 import com.z_soft.z_finance.fragments.BaseNodeListFragment;
 import com.z_soft.z_finance.listeners.BaseNodeActionListener;
+import com.z_soft.z_finance.utils.AppContext;
 
 public class OperationListActivity extends BaseListActivity<Operation, BaseNodeListFragment> {
 
@@ -38,26 +45,23 @@ public class OperationListActivity extends BaseListActivity<Operation, BaseNodeL
         super.initListeners();
 
         // при нажатии на кнопку добавления элемента
-//        iconAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-//                Source source = new DefaultSource();
-//
-//                // если пользователь выбрал таб и создает новый элемент - сразу прописываем тип
-//                if (defaultSourceType != null) {
-//                    source.setOperationType(defaultSourceType);
-//                }
-//
-//
-//                Intent intent = new Intent(SourceListActivity.this, EditSourceActivity.class); // какой акивити хоти вызвать
-//                intent.putExtra(AppContext.NODE_OBJECT, source); // помещаем выбранный объект node для передачи в активити
-//                startActivityForResult(intent, AppContext.REQUEST_NODE_ADD, ActivityOptionsCompat.makeSceneTransitionAnimation(SourceListActivity.this).toBundle()); // REQUEST_NODE_EDIT - индикатор, кто является инициатором); // REQUEST_NODE_ADD - индикатор, кто является инициатором
-
-//            }
-//        });
+                runAddOperationActivity(EditIncomeOperationActivity.class, new IncomeOperation());
+            }
+        });
 
 
+    }
+
+    // какой активити хотим вызвать для добавления новой операции (в зависимости от типа операции)
+    private void runAddOperationActivity(Class activityClass, Operation operation) {
+        Intent intent = new Intent(this, activityClass);
+        intent.putExtra(AppContext.NODE_OBJECT, operation); // помещаем выбранный объект operation для передачи в активити
+        intent.putExtra(AppContext.OPERATION_ACTION, AppContext.OPERATION_ADD);
+        ActivityCompat.startActivityForResult(OperationListActivity.this,intent, AppContext.REQUEST_NODE_ADD, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
     }
 
     @Override

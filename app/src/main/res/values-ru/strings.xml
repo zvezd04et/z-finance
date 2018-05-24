@@ -38,7 +38,13 @@
 
     <string name="enter_name">Введите название</string>
     <string name="enter_value">Введите значение</string>
+    <string name="enter_amount">Введите сумму</string>
     <string name="type">Тип</string>
+
+    <string name="select_source_from">Выберите категорию, откуда получили</string>
+    <string name="select_source_to">Выберите категорию, куда потратили</string>
+    <string name="select_storage_from">Выберите счет, откуда переводите</string>
+    <string name="select_storage_to">Выберите счет, куда переводите</string>
 
     <string name="income">Доход</string>
     <string name="outcome">Расход</string>

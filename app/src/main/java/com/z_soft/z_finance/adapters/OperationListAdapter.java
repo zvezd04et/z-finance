@@ -10,6 +10,7 @@ import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
 import com.z_soft.z_finance.adapters.abstracts.BaseNodeListAdapter;
 import com.z_soft.z_finance.adapters.holders.OperationViewHolder;
+import com.z_soft.z_finance.comparators.OperationDateComparator;
 import com.z_soft.z_finance.core.database.Initializer;
 import com.z_soft.z_finance.core.enums.OperationType;
 import com.z_soft.z_finance.core.impls.operations.ConvertOperation;
@@ -32,6 +33,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
 
     public OperationListAdapter() {
         super(Initializer.getOperationManager(), R.layout.operation_item);
+        comparator = OperationDateComparator.getInstance();
     }
 
 
@@ -71,6 +73,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
 
         Intent intent = new Intent(activityContext, activityClass); // какой акивити хотим вызвать
         intent.putExtra(AppContext.NODE_OBJECT, operation); // помещаем выбранный объект operation для передачи в активити
+        intent.putExtra(AppContext.OPERATION_ACTION, AppContext.OPERATION_EDIT); // режим редактирования
         (activityContext).startActivityForResult(intent, requestCode, ActivityOptionsCompat.makeSceneTransitionAnimation(activityContext).toBundle()); // устанавливаем анимацию перехода
 
     }
@@ -89,9 +92,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
     public void onBindViewHolder(OperationViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);// не забывать вызывать, чтобы заполнить общие компоненты
 
-        Operation operation = adapterList.get(position);// определяем выбранный пункт
-
-        OperationType type=operation.getOperationType();
+        final Operation operation = adapterList.get(position);// определяем выбранный пункт
 
         String subTitle;
 
@@ -114,6 +115,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
                 amountTitle = "+" +  incomeOperation.getFromAmount().toString()+" "+incomeOperation.getFromCurrency().getSymbol().substring(0, 1);
 
                 holder.tvNodeName.setText(incomeOperation.getFromSource().getName() + " -> " + incomeOperation.getToStorage().getName());
+                holder.tvOperationTypeTag.setText(OperationTypeUtils.incomeType.toString());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(incomeOperation.getFromSource().getIconName())); // иконка для операции - из категории, откуда пришли деньги
 
                 break;
@@ -123,6 +125,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
                 OutcomeOperation outcomeOperation = (OutcomeOperation) operation;
                 amountTitle = "-" + outcomeOperation.getFromAmount().toString()+" "+outcomeOperation.getFromCurrency().getSymbol().substring(0, 1);
                 holder.tvNodeName.setText(outcomeOperation.getFromStorage().getName() + " -> " + outcomeOperation.getToSource().getName());
+                holder.tvOperationTypeTag.setText(OperationTypeUtils.outcomeType.toString());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(outcomeOperation.getToSource().getIconName()));// иконка для операции - из категории, куда потратили деньги
 
                 break;
@@ -131,6 +134,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
                 operationColor = ContextCompat.getColor(activityContext, ColorUtils.transferColor);
                 TransferOperation transferOperation = (TransferOperation) operation;
                 holder.tvNodeName.setText(transferOperation.getFromStorage().getName() + " -> " + transferOperation.getToStorage().getName());
+                holder.tvOperationTypeTag.setText(OperationTypeUtils.transferType.toString());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(transferOperation.getToStorage().getIconName()));// иконка для операции - из счета, куда перевели деньги
 
                 break;
@@ -140,6 +144,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
                 ConvertOperation convertOperation = (ConvertOperation) operation;
                 amountTitle = convertOperation.getToAmount().toString()+" "+convertOperation.getFromCurrency().getSymbol().substring(0, 1);
                 holder.tvNodeName.setText(convertOperation.getFromStorage().getName() + " -> " + convertOperation.getToStorage().getName());
+                holder.tvOperationTypeTag.setText(OperationTypeUtils.convertType.toString());
                 holder.imgNodeIcon.setImageDrawable(IconUtils.getIcon(convertOperation.getToStorage().getIconName()));// иконка для операции - из счета, куда перевели деньги
 
                 break;
@@ -151,22 +156,6 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
 
         holder.tvOperationAmount.setText(amountTitle);
         holder.tvOperationSubtitle.setText(subTitle);
-
-        switch (type){
-            case INCOME:
-                holder.tvOperationTypeTag.setText(OperationTypeUtils.incomeType.toString());
-                break;
-            case OUTCOME:
-                holder.tvOperationTypeTag.setText(OperationTypeUtils.outcomeType.toString());
-                break;
-            case TRANSFER:
-                holder.tvOperationTypeTag.setText(OperationTypeUtils.transferType.toString());
-                break;
-            case CONVERT:
-                holder.tvOperationTypeTag.setText(OperationTypeUtils.convertType.toString());
-                break;
-        }
-
 
     }
 
