@@ -231,7 +231,7 @@ public abstract class BaseEditOperationActivity<T extends Operation> extends App
         adapter.clear();
         adapter.addAll(storage.getAvailableCurrencies());
 
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
 
 
         // если ранее (до выбора счета) уже выбрали в списке валюту

@@ -225,15 +225,15 @@
 
                         <Spinner
                             android:id="@+id/spn_currency"
-                            android:layout_width="75dp"
+                            android:layout_width="wrap_content"
 
                             android:layout_height="20dp"
                             android:layout_alignBottom="@id/tv_operation_amount"
                             android:layout_alignParentRight="true"
 
-                            android:layout_marginLeft="5dp"
-
-                            android:spinnerMode="dropdown">
+                            android:spinnerMode="dropdown"
+                            android:textAlignment="gravity"
+                            android:textAppearance="@android:style/Widget.Material.Light.Spinner">
 
                         </Spinner>
 

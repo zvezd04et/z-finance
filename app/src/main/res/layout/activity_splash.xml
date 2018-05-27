@@ -24,11 +24,12 @@
         android:text="@string/loading"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/background_dark"
-        gpb:layout_constraintBottom_toBottomOf="parent"
+        gpb:layout_constraintBottom_toTopOf="@+id/google_progress"
         gpb:layout_constraintEnd_toEndOf="parent"
+        gpb:layout_constraintHorizontal_bias="0.501"
         gpb:layout_constraintStart_toStartOf="parent"
         gpb:layout_constraintTop_toTopOf="parent"
-        gpb:layout_constraintVertical_bias="0.402" />
+        gpb:layout_constraintVertical_bias="0.941" />
 
     <com.jpardogo.android.googleprogressbar.library.GoogleProgressBar
         android:id="@+id/google_progress"
@@ -36,7 +37,7 @@
         android:layout_height="59dp"
         android:layout_below="@id/text_loading"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="40dp"
 
         android:layout_marginStart="40dp"
@@ -46,6 +47,6 @@
         gpb:layout_constraintEnd_toEndOf="parent"
         gpb:layout_constraintStart_toStartOf="parent"
         gpb:layout_constraintTop_toTopOf="parent"
-        gpb:layout_constraintVertical_bias="0.269"
+        gpb:layout_constraintVertical_bias="0.18"
         gpb:type="folding_circles" />
 </android.support.constraint.ConstraintLayout>
