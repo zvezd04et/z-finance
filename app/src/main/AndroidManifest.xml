@@ -47,6 +47,10 @@
             android:name=".activities.edit.operation.EditIncomeOperationActivity"
             android:label="@string/title_activity_edit_income_operation"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity
+            android:name=".activities.edit.operation.EditOutcomeOperationActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

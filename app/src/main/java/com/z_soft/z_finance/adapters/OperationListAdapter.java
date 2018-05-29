@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
+import com.z_soft.z_finance.activities.edit.operation.EditOutcomeOperationActivity;
 import com.z_soft.z_finance.adapters.abstracts.BaseNodeListAdapter;
 import com.z_soft.z_finance.adapters.holders.OperationViewHolder;
 import com.z_soft.z_finance.comparators.OperationDateComparator;
@@ -55,6 +56,7 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
                         activityClass = EditIncomeOperationActivity.class;
                         break;
                     case OUTCOME:
+                        activityClass = EditOutcomeOperationActivity.class;
                         break;
                     case TRANSFER:
                         break;

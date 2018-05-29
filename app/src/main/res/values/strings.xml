@@ -52,6 +52,11 @@
     <string name="transfer">Transfer</string>
     <string name="convert">Convert</string>
 
+    <string name="add_income">+ Income</string>
+    <string name="add_outcome">+ Outcome</string>
+    <string name="add_transfer">+ Transfer</string>
+    <string name="add_convert">+ Convert</string>
+
     <string name="editing">Edit</string>
     <string name="adding">Add</string>
 

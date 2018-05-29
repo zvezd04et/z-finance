@@ -30,6 +30,10 @@
 
                 <include layout="@layout/operation_list_actions"/>
 
+                <include layout="@layout/tlb_operation_create"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"/>
 
             </android.support.design.widget.AppBarLayout>
 

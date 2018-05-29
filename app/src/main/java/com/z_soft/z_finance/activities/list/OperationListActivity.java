@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
+import android.widget.Button;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.abstracts.BaseListActivity;
 import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
+import com.z_soft.z_finance.activities.edit.operation.EditOutcomeOperationActivity;
 import com.z_soft.z_finance.adapters.OperationListAdapter;
 import com.z_soft.z_finance.core.impls.operations.IncomeOperation;
+import com.z_soft.z_finance.core.impls.operations.OutcomeOperation;
 import com.z_soft.z_finance.core.interfaces.Operation;
 import com.z_soft.z_finance.fragments.BaseNodeListFragment;
 import com.z_soft.z_finance.listeners.BaseNodeActionListener;
@@ -18,6 +21,10 @@ import com.z_soft.z_finance.utils.AppContext;
 
 public class OperationListActivity extends BaseListActivity<Operation, BaseNodeListFragment> {
 
+    private Button btnAddIncome;
+    private Button btnAddOutcome;
+    private Button btnAddTransfer;
+    private Button btnAddConvert;
 
     public OperationListActivity() {
 
@@ -37,24 +44,29 @@ public class OperationListActivity extends BaseListActivity<Operation, BaseNodeL
 
         createDrawer(toolbar);
 
-    }
+        btnAddIncome = findViewById(R.id.btn_add_income);
+        btnAddOutcome = findViewById(R.id.btn_add_outcome);
+        btnAddTransfer = findViewById(R.id.btn_add_transfer);
+        btnAddConvert = findViewById(R.id.btn_add_convert);
 
 
-    @Override
-    protected void initListeners() {
-        super.initListeners();
-
-        // при нажатии на кнопку добавления элемента
-        iconAdd.setOnClickListener(new View.OnClickListener() {
+        // каждая кнопка создает свой операцию нужного типа
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 runAddOperationActivity(EditIncomeOperationActivity.class, new IncomeOperation());
             }
         });
 
+        btnAddOutcome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runAddOperationActivity(EditOutcomeOperationActivity.class, new OutcomeOperation());
+            }
+        });
 
     }
+
 
     // какой активити хотим вызвать для добавления новой операции (в зависимости от типа операции)
     private void runAddOperationActivity(Class activityClass, Operation operation) {

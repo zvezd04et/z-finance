@@ -51,6 +51,11 @@
     <string name="transfer">Перевод</string>
     <string name="convert">Обмен</string>
 
+    <string name="add_income">+ Доход</string>
+    <string name="add_outcome">+ Расход</string>
+    <string name="add_transfer">+ Перевод</string>
+    <string name="add_convert">+ Обмен</string>
+
     <string name="editing">Редактирование</string>
     <string name="adding">Добавление</string>
 
