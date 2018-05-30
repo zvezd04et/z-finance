@@ -7,8 +7,10 @@ import android.text.format.DateUtils;
 import android.view.ViewGroup;
 
 import com.z_soft.z_finance.R;
+import com.z_soft.z_finance.activities.edit.operation.EditConvertOperationActivity;
 import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
 import com.z_soft.z_finance.activities.edit.operation.EditOutcomeOperationActivity;
+import com.z_soft.z_finance.activities.edit.operation.EditTransferOperationActivity;
 import com.z_soft.z_finance.adapters.abstracts.BaseNodeListAdapter;
 import com.z_soft.z_finance.adapters.holders.OperationViewHolder;
 import com.z_soft.z_finance.comparators.OperationDateComparator;
@@ -59,8 +61,10 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
                         activityClass = EditOutcomeOperationActivity.class;
                         break;
                     case TRANSFER:
+                        activityClass = EditTransferOperationActivity.class;
                         break;
                     case CONVERT:
+                        activityClass = EditConvertOperationActivity.class;
                         break;
                 }
 

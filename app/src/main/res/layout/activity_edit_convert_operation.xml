@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.edit.operation.EditConvertOperationActivity">
+
+
+    <include
+        android:id="@+id/operation_toolbar"
+        layout="@layout/node_edit_actions" />
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/operation_toolbar"
+
+
+        >
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <RelativeLayout
+                android:id="@+id/layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/scroll"
+
+
+                >
+
+
+                <RelativeLayout
+
+                    android:id="@+id/layout_type"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@color/colorGray"
+                    android:paddingBottom="15dp"
+
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+
+                    android:paddingTop="15dp"
+
+
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_operation_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="@string/operation_type"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                    <TextView
+                        android:id="@+id/tv_operation_type_selected"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_operation_type"
+                        android:layout_alignParentRight="true"
+                        android:background="@android:color/background_dark"
+                        android:gravity="center_vertical"
+
+
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+
+                        android:text="type"
+                        android:textAlignment="center"
+
+                        android:textColor="@android:color/white"
+                        android:textSize="13sp" />
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/layout_type"
+
+                    android:layout_centerVertical="true"
+
+                    android:descendantFocusability="beforeDescendants"
+
+                    android:focusableInTouchMode="true"
+                    android:paddingBottom="20dp"
+
+                    android:id="@+id/layout_from"
+
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/layout_subtitle_from"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_subtitle_from"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/convert_from_title"
+                            android:textColor="@color/colorGray"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/layout_operation_from_storage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_subtitle_from"
+                        android:background="@drawable/ripple_rectangle"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="15dp">
+
+
+                        <TextView
+                            android:id="@+id/tv_operation_from_storage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/storage"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                        <TextView
+                            android:id="@+id/tv_operation_from_storage_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/tv_operation_from_storage"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:maxEms="20"
+                            android:text="@string/select_value"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                            android:textStyle="bold" />
+
+
+                        <ImageView
+                            android:id="@+id/ic_operation_from_storage_selected"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+
+                            android:layout_alignTop="@id/tv_operation_from_storage_selected"
+
+                            android:layout_marginRight="15dp"
+
+                            android:layout_toLeftOf="@id/tv_operation_from_storage_selected"
+
+                            />
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/layout_operation_from_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_operation_from_storage"
+                        android:background="@drawable/ripple_rectangle"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="15dp">
+
+
+                        <TextView
+                            android:id="@+id/tv_operation_from_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginRight="0dp"
+                            android:inputType="numberDecimal"
+                            android:text="@string/amount"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                        <Spinner
+                            android:id="@+id/spn_from_currency"
+                            android:layout_width="75dp"
+
+                            android:layout_height="20dp"
+                            android:layout_alignBottom="@id/tv_operation_from_amount"
+                            android:layout_alignParentRight="true"
+
+                            android:layout_marginLeft="5dp"
+
+                            android:spinnerMode="dropdown">
+
+                        </Spinner>
+
+
+                        <EditText
+                            android:id="@+id/et_operation_from_amount_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_alignTop="@id/tv_operation_from_amount"
+                            android:layout_toLeftOf="@id/spn_from_currency"
+                            android:background="#00000000"
+                            android:descendantFocusability="beforeDescendants"
+                            android:focusableInTouchMode="true"
+
+                            android:maxEms="20"
+                            android:singleLine="true"
+                            android:text="0"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                            android:textColor="@android:color/tertiary_text_dark"
+
+                            android:textStyle="bold"
+
+                            android:inputType="numberDecimal"
+
+                            />
+
+                    </RelativeLayout>
+
+
+
+                </RelativeLayout>
+
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/layout_from"
+                    android:layout_centerVertical="true"
+
+                    android:descendantFocusability="beforeDescendants"
+
+                    android:focusableInTouchMode="true"
+
+                    android:id="@+id/layout_to"
+
+
+
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/layout_subtitle_to"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_subtitle_to"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/convert_to_title"
+                            android:textColor="@color/colorGray"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/layout_operation_to_storage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_subtitle_to"
+                        android:background="@drawable/ripple_rectangle"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="15dp">
+
+
+                        <TextView
+                            android:id="@+id/tv_operation_to_storage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/storage"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                        <TextView
+                            android:id="@+id/tv_operation_to_storage_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/tv_operation_to_storage"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:maxEms="20"
+                            android:text="@string/select_value"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                            android:textStyle="bold" />
+
+
+                        <ImageView
+                            android:id="@+id/ic_operation_to_storage_selected"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+
+                            android:layout_alignTop="@id/tv_operation_to_storage_selected"
+
+                            android:layout_marginRight="15dp"
+
+                            android:layout_toLeftOf="@id/tv_operation_to_storage_selected"
+
+                            />
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/layout_operation_to_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_operation_to_storage"
+                        android:background="@drawable/ripple_rectangle"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="15dp">
+
+
+                        <TextView
+                            android:id="@+id/tv_operation_to_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginRight="0dp"
+                            android:inputType="numberDecimal"
+                            android:text="@string/amount"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                        <Spinner
+                            android:id="@+id/spn_to_currency"
+                            android:layout_width="75dp"
+
+                            android:layout_height="20dp"
+                            android:layout_alignBottom="@id/tv_operation_to_amount"
+                            android:layout_alignParentRight="true"
+
+                            android:layout_marginLeft="5dp"
+
+                            android:spinnerMode="dropdown">
+
+                        </Spinner>
+
+
+                        <EditText
+                            android:id="@+id/et_operation_to_amount_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_alignTop="@id/tv_operation_to_amount"
+                            android:layout_toLeftOf="@id/spn_to_currency"
+                            android:background="#00000000"
+                            android:descendantFocusability="beforeDescendants"
+                            android:focusableInTouchMode="true"
+
+                            android:maxEms="20"
+                            android:singleLine="true"
+                            android:text="0"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                            android:textColor="@android:color/tertiary_text_dark"
+
+                            android:textStyle="bold"
+                            android:inputType="numberDecimal"
+
+
+                            />
+
+                    </RelativeLayout>
+
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/layout_additional"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/layout_to"
+                    android:background="@drawable/ripple_rectangle"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp">
+
+
+                    <ImageView
+                        android:id="@+id/ic_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="60dp"
+                        android:src="@drawable/ic_calendar_small"
+                        android:tint="@color/colorGray"
+
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_operation_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/ic_calendar"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/ic_calendar"
+                        android:text="Date"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+
+                    <TextView
+                        android:id="@+id/tv_operation_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_operation_date"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        android:maxEms="20"
+                        android:text="Time"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+
+                        />
+
+                    <ImageView
+                        android:id="@+id/ic_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_alignBottom="@id/tv_operation_date"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@id/tv_operation_time"
+
+
+                        android:src="@drawable/ic_time"
+                        android:tint="@color/colorGray"
+
+                        />
+
+
+                    <EditText
+                        android:id="@+id/et_operation_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_below="@+id/tv_operation_date"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/et_border"
+                        android:ems="10"
+                        android:gravity="top|left"
+                        android:inputType="textMultiLine"
+
+                        android:padding="10dp"
+                        android:textColor="@color/colorText"
+
+
+                        />
+
+                </RelativeLayout>
+
+
+
+
+
+
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

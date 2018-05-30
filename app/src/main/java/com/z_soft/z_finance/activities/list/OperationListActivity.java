@@ -9,11 +9,15 @@ import android.widget.Button;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.abstracts.BaseListActivity;
+import com.z_soft.z_finance.activities.edit.operation.EditConvertOperationActivity;
 import com.z_soft.z_finance.activities.edit.operation.EditIncomeOperationActivity;
 import com.z_soft.z_finance.activities.edit.operation.EditOutcomeOperationActivity;
+import com.z_soft.z_finance.activities.edit.operation.EditTransferOperationActivity;
 import com.z_soft.z_finance.adapters.OperationListAdapter;
+import com.z_soft.z_finance.core.impls.operations.ConvertOperation;
 import com.z_soft.z_finance.core.impls.operations.IncomeOperation;
 import com.z_soft.z_finance.core.impls.operations.OutcomeOperation;
+import com.z_soft.z_finance.core.impls.operations.TransferOperation;
 import com.z_soft.z_finance.core.interfaces.Operation;
 import com.z_soft.z_finance.fragments.BaseNodeListFragment;
 import com.z_soft.z_finance.listeners.BaseNodeActionListener;
@@ -62,6 +66,20 @@ public class OperationListActivity extends BaseListActivity<Operation, BaseNodeL
             @Override
             public void onClick(View v) {
                 runAddOperationActivity(EditOutcomeOperationActivity.class, new OutcomeOperation());
+            }
+        });
+
+        btnAddTransfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runAddOperationActivity(EditTransferOperationActivity.class, new TransferOperation());
+            }
+        });
+
+        btnAddConvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runAddOperationActivity(EditConvertOperationActivity.class, new ConvertOperation());
             }
         });
 

@@ -68,8 +68,16 @@
     <string name="title_activity_select_icon">SelectIconActivity</string>
     <string name="title_activity_edit_income_operation">EditIncomeOperationActivity</string>
 
+    <string name="convert_from_title">From</string>
+    <string name="convert_to_title">To</string>
+
+    <string name="enter_amount_from">Enter amount FROM</string>
+    <string name="enter_amount_to">Enter amount TO</string>
+
     <string name="source">Source</string>
     <string name="storage">Storage</string>
+    <string name="storage_from">Storage (from)</string>
+    <string name="storage_to">Storage (to)</string>
     <string name="amount">Amount</string>
     <string name="currency">Currency</string>
     <string name="operation_type">Operation type</string>
