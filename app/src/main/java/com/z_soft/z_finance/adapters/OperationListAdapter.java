@@ -3,8 +3,12 @@ package com.z_soft.z_finance.adapters;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.format.DateUtils;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.z_soft.z_finance.R;
 import com.z_soft.z_finance.activities.edit.operation.EditConvertOperationActivity;
@@ -95,8 +99,41 @@ public class OperationListAdapter extends BaseNodeListAdapter<Operation, Operati
 
     // этот метод устанавливает только специфичные данные для элемента списка
     @Override
-    public void onBindViewHolder(OperationViewHolder holder, int position) {
+    public void onBindViewHolder(final OperationViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);// не забывать вызывать, чтобы заполнить общие компоненты
+
+        final Operation node = adapterList.get(position);// определяем выбранный пункт
+        holder.layoutMain.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                PopupMenu dropDownMenu = new PopupMenu(activityContext, holder.tvNodeName);
+                dropDownMenu.getMenuInflater().inflate(R.menu.oper_popup_menu, dropDownMenu.getMenu());
+                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        int id = menuItem.getItemId();
+
+                        // считываем, какой пункт нажали по его id
+                         if (id == R.id.item_edit) {
+                             runEditActivity(position, node);
+                        } else if (id == R.id.item_delete) {// если нажали пункт удаления
+                             deleteWithSnackbar(node, position);
+                        }
+
+                        return true;
+                    }
+
+
+                });
+
+                dropDownMenu.show();
+
+                return true;
+            }
+        });
+
 
         final Operation operation = adapterList.get(position);// определяем выбранный пункт
 

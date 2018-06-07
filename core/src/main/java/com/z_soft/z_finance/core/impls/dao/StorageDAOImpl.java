@@ -58,7 +58,7 @@ public class StorageDAOImpl<T extends Storage> implements StorageDAO {
                     stmt.setLong(1, storage.getId());
                     try(ResultSet rs = stmt.executeQuery()){
                         while (rs.next()) {
-                            storage.addCurrency(Currency.getInstance(rs.getString("currency_code")), rs.getBigDecimal("amount"));
+                            storage.addCurrency(Currency.getInstance(rs.getString("currency_code")), new BigDecimal(rs.getDouble("amount")));
                         }
                     }
                 }
